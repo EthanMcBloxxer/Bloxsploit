@@ -1,0 +1,1669 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<style type="text/css">
+		html,
+		body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+	</style>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+
+<body>
+	<div id="container" style="width:100%;height:100%;"></div>
+	<script src="vs/loader.js"></script>
+	<script type="text/javascript">
+		require.config({ paths: { 'vs': 'vs' } });
+
+		// Honestly this was kinda stolen from krnl's monaco but not rly
+		// dont tell em
+
+		// API
+		var GetText;
+		var SetText;
+		var SetTheme;
+		var SetImage;
+		var SetScroll;
+		var ShowErr;
+		var Refresh;
+
+		// Enablers
+		var SwitchMinimap;
+		var SwitchReadonly;
+		var SwitchRenderWhitespace;
+		var SwitchLinks;
+		var SwitchLineHeight;
+		var SwitchFontSize;
+		var SwitchFolding;
+		var SwitchAutoIndent;
+		var SwitchFontFamily;
+		var SwitchFontLigatures;
+		var AddIntellisense;
+
+		// Variables
+		var editor;
+		var Proposals = [];
+
+		require(['vs/editor/editor.main'], function () {
+			function getDependencyProposals() {
+				return [
+					{
+						label: 'Class',
+						kind: monaco.languages.CompletionItemKind.Class,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Color',
+						kind: monaco.languages.CompletionItemKind.Color,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Constant',
+						kind: monaco.languages.CompletionItemKind.Constant,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Constructor',
+						kind: monaco.languages.CompletionItemKind.Constructor,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Enum',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'EnumMember',
+						kind: monaco.languages.CompletionItemKind.EnumMember,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Event',
+						kind: monaco.languages.CompletionItemKind.Event,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Field',
+						kind: monaco.languages.CompletionItemKind.Field,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'File',
+						kind: monaco.languages.CompletionItemKind.File,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Folder',
+						kind: monaco.languages.CompletionItemKind.Folder,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Function',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Interface',
+						kind: monaco.languages.CompletionItemKind.Interface,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Keyword',
+						kind: monaco.languages.CompletionItemKind.Keyword,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Method',
+						kind: monaco.languages.CompletionItemKind.Method,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Module',
+						kind: monaco.languages.CompletionItemKind.Module,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Operator',
+						kind: monaco.languages.CompletionItemKind.Operator,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Property',
+						kind: monaco.languages.CompletionItemKind.Property,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Reference',
+						kind: monaco.languages.CompletionItemKind.Reference,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Snippet',
+						kind: monaco.languages.CompletionItemKind.Snippet,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Struct',
+						kind: monaco.languages.CompletionItemKind.Struct,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Text',
+						kind: monaco.languages.CompletionItemKind.Text,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'TypeParameter',
+						kind: monaco.languages.CompletionItemKind.TypePerameter,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Unit',
+						kind: monaco.languages.CompletionItemKind.Unit,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Value',
+						kind: monaco.languages.CompletionItemKind.Value,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'Variable',
+						kind: monaco.languages.CompletionItemKind.Variable,
+						detal: "Monaco Variable",
+						insertText: '',
+					},
+					{
+						label: 'and',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'and',
+					},
+					{
+						label: 'break',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'break',
+					},
+					{
+						label: 'do',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'do',
+					},
+					{
+						label: 'else',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'else',
+					},
+					{
+						label: 'elseif',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'elseif',
+					},
+					{
+						label: 'end',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'end',
+					},
+					{
+						label: 'for',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'for',
+					},
+					{
+						label: 'function',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'function',
+					},
+					{
+						label: 'if',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'if',
+					},
+					{
+						label: 'in',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'in',
+					},
+					{
+						label: 'local',
+						kind: monaco.languages.CompletionItemKind.Text,
+						detail: "",
+						//insertText: 'local',
+					},
+					{
+						label: 'nil',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'nil',
+					},
+					{
+						label: 'not',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'not',
+					},
+					{
+						label: 'or',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'or',
+					},
+					{
+						label: 'repeat',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: 'repeat',
+					},
+					{
+						label: 'return',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'then',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'true',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'until',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'while',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'math.abs',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the absolute value of x",
+						//insertText: '',
+					},
+					{
+						label: 'math.acos',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the arc cosine of x",
+						//insertText: '',
+					},
+					{
+						label: 'math.asin',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the arc sine of x",
+						//insertText: '',
+					},
+					{
+						label: 'math.atan',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the arc tangent of x",
+						//insertText: '',
+					},
+					{
+						label: 'math.atan2',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the arc tangent of y/x (in radians)",
+						//insertText: '',
+					},
+					{
+						label: 'math.ceil',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the smallest integer larger than or equal to x",
+						//insertText: '',
+					},
+					{
+						label: 'math.cos',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the cosine of x (radians)",
+						//insertText: '',
+					},
+					{
+						label: 'math.cosh',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the hyperbolic cosine of x",
+						//insertText: '',
+					},
+					{
+						label: 'math.deg',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the angle x (radians)",
+						//insertText: '',
+					},
+					{
+						label: 'math.exp',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the value of x",
+						//insertText: '',
+					},
+					{
+						label: 'math.floor',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the largest integer smaller than or equal to x",
+						//insertText: '',
+					},
+					{
+						label: 'math.fmod',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the remainder of the division of x by y that rounds the quotient",
+						//insertText: '',
+					},
+					{
+						label: 'math.frexp',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns m and e shuch that x = m2^e, e is an integer and the absolute value of m is in the range [0.5, 1 (or 0)]",
+						//insertText: '',
+					},
+					{
+						label: 'math.huge',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "The value HUGE_VAL, a value larger than or equal to any other numerical value",
+						//insertText: '',
+					},
+					{
+						label: 'math.ldexp',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns m2^e",
+						//insertText: '',
+					},
+					{
+						label: 'math.log',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the logarithm of x in the given base. The default for the base is e",
+						//insertText: '',
+					},
+					{
+						label: 'math.log10',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the base-10 logarithm",
+						//insertText: '',
+					},
+					{
+						label: 'math.max',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the maximum value",
+						//insertText: '',
+					},
+					{
+						label: 'math.min',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the minimum value",
+						//insertText: '',
+					},
+					{
+						label: 'math.modf',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns two numbers, the integral part of x and the fractional part of y",
+						//insertText: '',
+					},
+					{
+						label: 'math.pi',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the value of pi",
+						//insertText: '',
+					},
+					{
+						label: 'math.pow',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Retuns x^y",
+						//insertText: '',
+					},
+					{
+						label: 'math.rad',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the angle x (degrees and radians)",
+						//insertText: '',
+					},
+					{
+						label: 'math.random',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns a random value (x minimum, y maximum)",
+						//insertText: '',
+					},
+					{
+						label: 'math.randomseed',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Sets x as the seed for the RNG.",
+						//insertText: '',
+					},
+					{
+						label: 'math.sin',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the sine of x (radians)",
+						//insertText: '',
+					},
+					{
+						label: 'math.sinh',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the hyperbolic sine of x",
+						//insertText: '',
+					},
+					{
+						label: 'math.sqrt',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the square root of x",
+						//insertText: '',
+					},
+					{
+						label: 'math.tan',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the tangent of x (radians)",
+						//insertText: '',
+					},
+					{
+						label: 'math.tanh',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the hyperbolic tangent of x",
+						//insertText: '',
+					},
+					{
+						label: 'table.concat',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Given a list where all elements are strings or numbers, returns the string list[i]..sep..list[i+1] ... sep..list[j]",
+						//insertText: '',
+					},
+					{
+						label: 'table.foreach',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Apply the function f to the elements of the table",
+						//insertText: '',
+					},
+					{
+						label: 'table.foreachi',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detal: "This is similar to table.foreach() except that index-value pairs are passed, not key-value pairs",
+						//insertText: '',
+					},
+					{
+						label: 'table.sort',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Sorts elements of array t in a given order, from t[1] to t[#t]",
+						//insertText: '',
+					},
+					{
+						label: 'table.insert',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Appends the provided value to the end of array t",
+						//insertText: '',
+					},
+					{
+						label: 'table.remove',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Removes from array t the element at position pos, returning the value of the removed element",
+						//insertText: '',
+					},
+					{
+						label: 'Color3.new',
+						kind: monaco.languages.CompletionItemKind.Color,
+						detail: "Creates a Color3 whose values are (0,0,0) or black",
+						//insertText: '',
+					},
+					{
+						label: 'Instance.new',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Used to create objects via code",
+						//insertText: '',
+					},
+					{
+						label: 'BrickColor.new',
+						kind: monaco.languages.CompletionItemKind.Color,
+						detail: "Constructs a BrickColor",
+						//insertText: '',
+					},
+					{
+						label: 'Vector3.new',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Constructs a new Vector3 using the given x, y, and z components",
+						//insertText: '',
+					},
+					{
+						label: 'Vector2.new',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Creates a new Vector3 using ordinates x and y",
+						//insertText: '',
+					},
+					{
+						label: 'debug.debug',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'debug.gethook',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the current hook settings of the thread, as three values",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getinfo',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns a table with info about a function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getlocal',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the name and the value of the local variable with index local of the function at level of the stack",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getmetatable',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the metatable of the given object",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getregistry',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the registry table",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getupvalue',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "This function returns the name and the value of the upvalue with index up of the function func",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getuservalue',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'debug.sethook',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Sets the given function as a hook",
+						//insertText: '',
+					},
+					{
+						label: 'debug.setlocal',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Assigns the value to the local variable with index local of the function at level or the stack",
+						//insertText: '',
+					},
+					{
+						label: 'debug.setmetatable',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Sets the metatable for the given object to the given table",
+						//insertText: '',
+					},
+					{
+						label: 'debug.setupvalue',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "This function assigns the value to the upvalue with index up of the function func",
+						//insertText: '',
+					},
+					{
+						label: 'debug.setuservalue',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'debug.traceback',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Builds an extended error message with a traceback",
+						//insertText: '',
+					},
+					{
+						label: 'debug.upvalueid',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'debug.upvaluejoin',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.byte',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns the internal numerical codes of the characters s[i], s[i+1], …, s[j]",
+						//insertText: '',
+					},
+					{
+						label: 'string.char',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Returns a string with length equal to the number of arguments, in which each character has the internal numerical code equal to its corresponding argument",
+						//insertText: '',
+					},
+					{
+						label: 'string.dump',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "Depricated",
+						//insertText: '',
+					},
+					{
+						label: 'string.find',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.format',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.gmatch',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.gsub',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.len',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.lower',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.match',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.rep',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.reverse',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.sub',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'string.upper',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.create',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.resume',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.running',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.status',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.wrap',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.yield',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'print',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'warn',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'wait',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'info',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'printidentity',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'assert',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'collectgarbage',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'error',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'getfenv',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'getmetatable',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'setmetatable',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'ipairs',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'loadfile',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'loadstring',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'newproxy',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'next',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'pairs',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'pcall',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'spawn',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'rawequal',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'rawget',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'rawset',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'select',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'tonumber',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'tostring',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'type',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'unpack',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'xpcall',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'delay',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'stats',
+						kind: monaco.languages.CompletionItemKind.Function,
+						detail: "",
+						//insertText: '',
+					},
+					{
+						label: 'Remove()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Destroy()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'BreakJoints()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'GetChildren()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstChild()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'FireServer()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'InvokeServer()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'ClearAllChildren()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Clone()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstAncestor()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstAncestorOfClass()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstAncestorWhichIsA()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstChildOfClass()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstChildWhichIsA()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'GetDebugId()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'GetDescendants()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'GetFullName()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'IsA()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'GetPropertyChangedSignal()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'IsAncestorOf()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'IsDescendantOf()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'WaitForChild()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Connect()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'AncestryChanged()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Changed()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'ChildAdded()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'ChildRemoved()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'DescendantAdded()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'DescendantRemoving()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'GetService()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'GetObjects()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'HttpGet()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'HttpPost()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'HttpGetAsync()',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Instance',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Color3',
+						kind: monaco.languages.CompletionItemKind.Color,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Vector3',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Vector2',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'BrickColor',
+						kind: monaco.languages.CompletionItemKind.Color,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'math',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'table',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'debug',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'string',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'coroutine',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'UserInputService',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: '_G',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: '_VERSION',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'Enum',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'game',
+						kind: monaco.languages.CompletionItemKind.Module,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'plugin',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'shared',
+						kind: monaco.languages.CompletionItemKind.Field,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'script',
+						kind: monaco.languages.CompletionItemKind.Module,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'workspace',
+						kind: monaco.languages.CompletionItemKind.Module,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'DebuggerManager',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'elapsedTime',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'PluginManager',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'settings',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						//insertText: '',
+					},
+					{
+						label: 'tick',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						////insertText: '',
+					},
+					{
+						label: 'time',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						insertText: 'time',
+					},
+					{
+						label: 'typeof',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						insertText: 'typeof',
+					},
+					{
+						label: 'UserSettings',
+						kind: monaco.languages.CompletionItemKind.Function,
+						//
+						insertText: 'UserSettings',
+					}
+				];
+			}
+
+			monaco.languages.registerCompletionItemProvider('lua', {
+				provideCompletionItems: function (model, position) {
+					return getDependencyProposals();
+				}
+			});
+
+			monaco.editor.defineTheme('defaultDark', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#353535',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultLight', {
+				base: 'vs',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '7b2908', fontStyle: "bold" },
+					{ token: 'keyword', foreground: '079283', fontStyle: "bold" },
+					{ token: 'comment', foreground: '996699' },
+					{ token: 'number', foreground: '0339ff' },
+					{ token: 'string', foreground: '520e6a' },
+				],
+				colors: {
+					'editor.background': '#cacaca',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultBlack', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#1b1b1b',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultRed', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#7c2324',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultPurple', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#6d355b',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultGreen', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#035503',
+				}
+			});
+
+			monaco.editor.defineTheme('synapse', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#2d2d2d',
+				}
+			});
+
+			editor = monaco.editor.create(document.getElementById('container'), {
+				value: [
+					"-- Welcome to Bloxsploit!",
+					"-- Join our Discord for scripts and help!",
+					"-- https://discord.com/invite/qhgRFQw",
+				].join('\n'),
+				language: 'lua',
+				theme: "defaultDark",
+				folding: true,
+				scrollbar: {
+					verticalHasArrows: true,
+				},
+				dragAndDrop: true,
+				links: false,
+				minimap: {
+					enabled: false,
+				},
+				showFoldingControls: "always",
+				smoothScrolling: true,
+			});
+
+			window.onresize = function () {
+				editor.layout();
+			};
+
+			GetText = function () {
+				return editor.getValue();
+			}
+
+			SetText = function (x) {
+				editor.setValue(x);
+			}
+
+			SetTheme = function (themeName) {
+				monaco.editor.setTheme(themeName)
+			}
+
+			SetImage = function (x) {
+				var urlString1 = "url=("
+				var urlString2 = ")"
+				document.getElementsByClassName("lines-content monaco-editor-background")[0].style.backgroundImage = urlString1.concat(x, urlString2)
+				document.getElementsByClassName("margin")[0].style.backgroundImage = urlString1.concat(x, urlString2)
+			}
+
+			SwitchMinimap = function (flag) {
+				editor.updateOptions({
+					minimap: {
+						enabled: flag,
+					}
+				});
+			}
+
+			SwitchReadonly = function (flag) {
+				editor.updateOptions({
+					readOnly: flag,
+				});
+			}
+
+			SwitchRenderWhitespace = function (op) {
+				editor.updateOptions({
+					renderWhitespace: op,
+				});
+			}
+
+			SwitchLinks = function (flag) {
+				editor.updateOptions({
+					links: flag,
+				});
+			}
+
+			SwitchLineHeight = function (num) {
+				editor.updateOptions({
+					lineHeight: num,
+				});
+			}
+
+			SwitchFontSize = function (num) {
+				editor.updateOptions({
+					fontSize: num,
+				});
+			}
+
+			SwitchFolding = function (flag) {
+				editor.updateOptions({
+					folding: flag,
+				});
+			}
+
+			SwitchAutoIndent = function (flag) {
+				editor.updateOptions({
+					autoIndent: flag,
+				});
+			}
+
+			SwitchFontFamily = function (name) {
+				editor.updateOptions({
+					fontFamily: name,
+				});
+			}
+
+			SwitchFontLigatures = function (flag) {
+				editor.updateOptions({
+					fontLigatures: flag,
+				});
+			}
+
+			ShowErr = function (line, column, endline, endcolumn, errMessage) {
+				editor.revealPositionInCenter({ lineNumber: line, column: column });
+				editor.deltaDecorations([], [
+					{
+						range: new monaco.Range(line, column, endline, endcolumn),
+						options: {
+							inlineClassName: 'squiggly-error',
+							hoverMessage: {
+								value: errMessage,
+							}
+						},
+					},
+				]);
+			}
+
+			AddIntellisense = function (l, k, d, i) {
+				var t;
+				switch (k) {
+					case "Class":
+						t = monaco.languages.CompletionItemKind.Class;
+						break;
+					case "Color":
+						t = monaco.languages.CompletionItemKind.Color;
+						break;
+					case "Constructor":
+						t = monaco.languages.CompletionItemKind.Constructor;
+						break;
+					case "Enum":
+						t = monaco.languages.CompletionItemKind.Enum;
+						break;
+					case "Field":
+						t = monaco.languages.CompletionItemKind.Field;
+						break;
+					case "File":
+						t = monaco.languages.CompletionItemKind.File;
+						break;
+					case "Folder":
+						t = monaco.languages.CompletionItemKind.Folder;
+						break;
+					case "Function":
+						t = monaco.languages.CompletionItemKind.Function;
+						break;
+					case "Interface":
+						t = monaco.languages.CompletionItemKind.Interface;
+						break;
+					case "Keyword":
+						t = monaco.languages.CompletionItemKind.Keyword;
+						break;
+					case "Method":
+						t = monaco.languages.CompletionItemKind.Method;
+						break;
+					case "Module":
+						t = monaco.languages.CompletionItemKind.Module;
+						break;
+					case "Property":
+						t = monaco.languages.CompletionItemKind.Property;
+						break;
+					case "Reference":
+						t = monaco.languages.CompletionItemKind.Reference;
+						break;
+					case "Snippet":
+						t = monaco.languages.CompletionItemKind.Snippet;
+						break;
+					case "Text":
+						t = monaco.languages.CompletionItemKind.Text;
+						break;
+					case "Unit":
+						t = monaco.languages.CompletionItemKind.Unit;
+						break;
+					case "Value":
+						t = monaco.languages.CompletionItemKind.Value;
+						break;
+					case "Variable":
+						t = monaco.languages.CompletionItemKind.Variable;
+						break;
+				}
+
+				Proposals.push({
+					label: l,
+					kind: t,
+					detail: d,
+					insertText: i
+				});
+			}
+
+			showErr = function (line, column, endline, endcolumn, errMessage) {
+				editor.revealPositionInCenter({ lineNumber: line, column: column });
+				editor.deltaDecorations([], [
+					{
+						range: new monaco.Range(line, column, endline, endcolumn),
+						options: {
+							inlineClassName: 'squiggly-error',
+							hoverMessage: {
+								value: errMessage,
+							}
+						},
+					},
+				]);
+			}
+
+			setScroll = function (line) {
+				editor.revealLineInCenter({ lineNumber: line });
+			}
+
+			refresh = function () {
+				var text = getText();
+				setText("");
+				editor.trigger('keyboard', 'type', { text: text });
+			}
+		});
+	</script>
+</body>
+
+</html>
