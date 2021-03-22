@@ -1,0 +1,261 @@
+﻿<UserControl x:Class="BloxsploitWPF.Options"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BloxsploitWPF"
+             mc:Ignorable="d"
+             Height="306" Width="677">
+    <UserControl.Resources>
+        <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientBrush.GradientStops>
+                <GradientStopCollection>
+                    <GradientStop Color="#FF505050" Offset="0.0"/>
+                    <GradientStop Color="#FF505050" Offset="1.0"/>
+                </GradientStopCollection>
+            </GradientBrush.GradientStops>
+        </LinearGradientBrush>
+
+        <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FF484848" />
+
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="2"
+  Background="{StaticResource NormalBrush}"
+  BorderThickness="1" />
+                <Border 
+  Grid.Column="0"
+  CornerRadius="2,0,0,2" 
+  Margin="1" 
+  Background="{StaticResource WindowBackgroundBrush}" 
+  BorderThickness="0,0,1,0" />
+                <Path 
+  x:Name="Arrow"
+  Grid.Column="1"     
+  HorizontalAlignment="Center"
+  VerticalAlignment="Center"
+  Data="M 0 0 L 4 4 L 8 0 Z"/>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+            <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+        </ControlTemplate>
+
+
+        <Style x:Key="{x:Type ComboBox}" TargetType="ComboBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton 
+         Name="ToggleButton" 
+         Template="{StaticResource ComboBoxToggleButton}" 
+         Grid.Column="2" 
+         Focusable="false"
+         IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+         ClickMode="Press">
+                            </ToggleButton>
+                            <ContentPresenter
+        Name="ContentSite"
+        IsHitTestVisible="False" 
+        Margin="3,3,23,3"
+        VerticalAlignment="Center"
+        HorizontalAlignment="Left" />
+                            <TextBox x:Name="PART_EditableTextBox"
+         Style="{x:Null}" 
+         Template="{StaticResource ComboBoxTextBox}" 
+         HorizontalAlignment="Left" 
+         VerticalAlignment="Center" 
+         Margin="3,3,23,3"
+         Focusable="True" 
+         Background="Transparent"
+         Visibility="Hidden"
+         IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                            <Popup 
+        Name="Popup"
+        Placement="Bottom"
+        IsOpen="{TemplateBinding IsDropDownOpen}"
+        AllowsTransparency="True" 
+        Focusable="False"
+        PopupAnimation="Slide">
+                                <Grid 
+          Name="DropDown"
+          SnapsToDevicePixels="True"                
+          MinWidth="{TemplateBinding ActualWidth}"
+          MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border 
+            x:Name="DropDownBorder"
+            Background="{StaticResource WindowBackgroundBrush}"
+            BorderThickness="1"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070"/>
+        <Style x:Key="OptionMarkFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="#FFF3F9FF"/>
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="#FF5593FF"/>
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Background" Color="#FFE6E6E6"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Border" Color="#FFBCBCBC"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="#FF707070"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Background" Color="#FFD9ECFF"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Border" Color="#FF3C77DD"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="#FF212121"/>
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource OptionMark.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="checkBoxBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid x:Name="markGrid">
+                                    <Path x:Name="optionMark" Data="F1 M 9.97498,1.22334L 4.6983,9.09834L 4.52164,9.09834L 0,5.19331L 1.27664,3.52165L 4.255,6.08833L 8.33331,1.52588e-005L 9.97498,1.22334 Z "
+                                      Fill="{StaticResource OptionMark.Pressed.Glyph}" Margin="5" Opacity="0" Stretch="Uniform"/>
+                                    <Rectangle x:Name="indeterminateMark" Fill="{StaticResource OptionMark.Static.Glyph}" Margin="2" Opacity="0"/>
+                                </Grid>
+                            </Border>
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasContent" Value="true">
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource OptionMarkFocusVisual}"/>
+                                <Setter Property="Padding" Value="4,-1,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.MouseOver.Border}"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource OptionMark.MouseOver.Glyph}"/>
+                                <Setter Property="Fill" TargetName="indeterminateMark" Value="{StaticResource OptionMark.MouseOver.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.Disabled.Border}"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource OptionMark.Disabled.Glyph}"/>
+                                <Setter Property="Fill" TargetName="indeterminateMark" Value="{StaticResource OptionMark.Disabled.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="{StaticResource OptionMark.Pressed.Border}"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource OptionMark.Pressed.Glyph}"/>
+                                <Setter Property="Fill" TargetName="indeterminateMark" Value="{StaticResource OptionMark.Pressed.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+                                <Setter Property="Opacity" TargetName="indeterminateMark" Value="0"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter Property="Opacity" TargetName="optionMark" Value="0"/>
+                                <Setter Property="Opacity" TargetName="indeterminateMark" Value="1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="#FF353535">
+        <Border BorderBrush="White" BorderThickness="1" Height="131" Margin="247,0,0,0" VerticalAlignment="Top" Background="#003C2727" HorizontalAlignment="Left" Width="258"/>
+        <Border BorderBrush="White" BorderThickness="1" Height="116" Margin="247,130,0,0" VerticalAlignment="Top" Background="#003C2727" HorizontalAlignment="Left" Width="258"/>
+        <Border BorderBrush="White" BorderThickness="1" Height="246" Margin="504,0,0,0" VerticalAlignment="Top" Background="#003C2727" HorizontalAlignment="Left" Width="173"/>
+        <Border BorderBrush="White" BorderThickness="1" Height="98" Margin="0,74,0,0" VerticalAlignment="Top" Background="#003C2727" HorizontalAlignment="Left" Width="248"/>
+        <Border BorderBrush="White" BorderThickness="1" Height="75" VerticalAlignment="Top" Background="#003C2727" HorizontalAlignment="Left" Width="248"/>
+        <Border BorderBrush="White" BorderThickness="1" Height="75" Margin="0,171,0,0" VerticalAlignment="Top" Background="#003C2727" HorizontalAlignment="Left" Width="248"/>
+
+        <Button x:Name="Back" Content="Back" Background="#FF484848" Foreground="White" FontSize="18" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,0,13,10" HorizontalAlignment="Right" Width="149" Height="40" Click="Back_Click" VerticalAlignment="Bottom"/>
+        <CheckBox x:Name="TopMost" Content="Top Most" HorizontalAlignment="Left" Margin="14,11,0,0" VerticalAlignment="Top" Foreground="White" BorderThickness="0" FontSize="16" Background="#FF484848" HorizontalContentAlignment="Center" Checked="TopMost_Checked"/>
+        <CheckBox x:Name="AutoAttach" Content="Auto-Attach" HorizontalAlignment="Left" Margin="126,11,0,0" VerticalAlignment="Top" Foreground="White" BorderThickness="0" FontSize="16" Background="#FF484848" HorizontalContentAlignment="Center" Checked="AutoAttach_Checked"/>
+        <Button x:Name="Discord" Content="Discord Server" Background="#FF484848" Foreground="White" FontSize="10" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="129,270,0,0" HorizontalAlignment="Left" Width="114" Height="26" VerticalAlignment="Top" Click="Discord_Click"/>
+        <Button x:Name="KillRoblox" Content="Kill Roblox" Background="#FF484848" Foreground="White" FontSize="10" BorderBrush="#00707070" BorderThickness="0" Margin="11,270,0,0" HorizontalAlignment="Left" Width="112" Height="26" VerticalAlignment="Top" Click="KillRoblox_Click" FontFamily="Segoe UI Semibold"/>
+        <TextBox x:Name="AGID" HorizontalAlignment="Right" Margin="0,28,180,0" TextWrapping="Wrap" Text="Game ID" Width="243" Background="#FF484848" Foreground="White" BorderThickness="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="23" VerticalAlignment="Top"/>
+        <Label Content="AltGen" FontFamily="Leelawadee" FontSize="16" Foreground="White" HorizontalAlignment="Right" Margin="0,4,270,0" Width="58" Height="28" VerticalAlignment="Top"/>
+        <ComboBox x:Name="AGAT" HorizontalAlignment="Right" Margin="0,57,283,0" VerticalAlignment="Top" Width="141" Height="21" Background="#FF484848" BorderBrush="#00A02323" BorderThickness="0" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="True">
+            <Button Content="Cracked" Background="#00DDDDDD" Foreground="White" BorderThickness="0"/>
+            <Button Content="Robot" Background="#00DDDDDD" Foreground="White" BorderThickness="0"/>
+            <Button Content="Premium" Background="#00DDDDDD" Foreground="White" BorderThickness="0"/>
+        </ComboBox>
+        <CheckBox x:Name="AGP" Content="Populated" HorizontalAlignment="Right" Margin="0,57,180,0" VerticalAlignment="Top" Foreground="White" BorderThickness="0" FontSize="16" Background="#FF484848" HorizontalContentAlignment="Center" Width="97"/>
+        <Button x:Name="Back_Copy" Content="Start" Background="#FF484848" Foreground="White" FontSize="14" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,83,180,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Right" Width="243"/>
+        <TextBox x:Name="Loadstringer" HorizontalAlignment="Right" Margin="0,270,226,0" TextWrapping="Wrap" Text="Loadstringer" Width="203" Background="#FF484848" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" VerticalAlignment="Top"/>
+        <Button x:Name="Loadstringify" Content="Go" Background="#FF484848" Foreground="White" FontSize="14" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,270,190,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="30" Click="Loadstringify_Click"/>
+        <Label Content="API" FontFamily="Leelawadee" FontSize="18" Foreground="White" HorizontalAlignment="Left" Margin="102,0,0,202" Width="38" Height="30" VerticalAlignment="Bottom"/>
+        <RadioButton Content="WeAreDevs" HorizontalAlignment="Left" Margin="28,0,0,188" VerticalAlignment="Bottom" Foreground="White" BorderThickness="0" VerticalContentAlignment="Center" Background="#FF484848" FontSize="14"/>
+        <RadioButton Content="EasyExploits" HorizontalAlignment="Left" Margin="126,0,0,188" VerticalAlignment="Bottom" Foreground="White" BorderThickness="0" VerticalContentAlignment="Center" Background="#FF484848" FontSize="14"/>
+        <RadioButton Content="CheatSquad" HorizontalAlignment="Left" Margin="28,0,0,164" VerticalAlignment="Bottom" Foreground="White" BorderThickness="0" VerticalContentAlignment="Center" Background="#FF484848" FontSize="14"/>
+        <RadioButton Content="Axon" HorizontalAlignment="Left" Margin="28,0,0,142" VerticalAlignment="Bottom" Foreground="White" BorderThickness="0" VerticalContentAlignment="Center" Background="#FF484848" FontSize="14"/>
+        <RadioButton Content="Neuron" HorizontalAlignment="Left" Margin="154,0,0,164" VerticalAlignment="Bottom" Foreground="White" BorderThickness="0" VerticalContentAlignment="Center" Background="#FF484848" FontSize="14"/>
+        <RadioButton Content="ShadowCheats" HorizontalAlignment="Left" Margin="110,0,0,142" Foreground="White" BorderThickness="0" VerticalContentAlignment="Center" Background="#FF484848" VerticalAlignment="Bottom" FontSize="14"/>
+        <CheckBox x:Name="BoostFPS_Copy" Content="Discord Rich Presence" HorizontalAlignment="Left" Margin="25,41,0,0" Foreground="White" BorderThickness="0" Background="#FF484848" HorizontalContentAlignment="Center" FontSize="16" Height="21" VerticalAlignment="Top"/>
+        <Button x:Name="DarkTheme" Content="Dark" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,26,89,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Label Content="Colors" FontFamily="Leelawadee" FontSize="16" Foreground="White" HorizontalAlignment="Right" Margin="0,0,99,0" Width="56" Height="26" VerticalAlignment="Top"/>
+        <Button x:Name="LightTheme" Content="Light" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,57,89,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Button x:Name="BlackTheme" Content="Black" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,88,89,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Button x:Name="RedTheme" Content="Red" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,120,89,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Button x:Name="PurpleTheme" Content="Purple" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,152,89,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Button x:Name="GreenTheme" Content="Green" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,184,89,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Button x:Name="SynapseTheme" Content="Synapse" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,26,6,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Button x:Name="SynapseLTheme" Content="SynapseL" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,57,6,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Button x:Name="ModernTheme" Content="Modern" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,88,6,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Button x:Name="CustomTheme" Content="Custom" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,215,89,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <TextBlock x:Name="AltGenLink" Text="Powered by V I S I O N" FontFamily="Leelawadee" FontSize="10" Foreground="White" HorizontalAlignment="Right" Margin="0,115,182,0" Width="101" Height="14" VerticalAlignment="Top" IsEnabled="False" PreviewMouseDown="AltGenLink_PreviewMouseDown"/>
+        <Slider x:Name="FPSSlider" HorizontalAlignment="Left" Margin="25,197,0,0" VerticalAlignment="Top" Width="195" Height="20" Maximum="260" Background="#00000000" Foreground="White" ValueChanged="FPSSlider_ValueChanged"/>
+        <TextBlock Text="Max FPS:" FontFamily="Leelawadee" FontSize="16" Foreground="White" Margin="78,217,0,0" Height="19" VerticalAlignment="Top" IsEnabled="False" PreviewMouseDown="AltGenLink_PreviewMouseDown" HorizontalAlignment="Left" Width="62"/>
+        <TextBlock x:Name="FPSCount" Text="300" FontFamily="Leelawadee" FontSize="16" Foreground="White" Margin="142,217,0,0" Height="19" VerticalAlignment="Top" IsEnabled="False" PreviewMouseDown="AltGenLink_PreviewMouseDown" HorizontalAlignment="Left" Width="26"/>
+        <TextBlock Text="FPS Unlocker" FontFamily="Leelawadee" Foreground="White" Margin="83,180,0,0" Height="18" VerticalAlignment="Top" IsEnabled="False" PreviewMouseDown="AltGenLink_PreviewMouseDown" HorizontalAlignment="Left" Width="84" FontSize="14"/>
+        <Label Content="Themes" FontFamily="Leelawadee" FontSize="16" Foreground="White" HorizontalAlignment="Right" Margin="0,0,12,0" Width="65" Height="27" VerticalAlignment="Top"/>
+        <TextBox x:Name="PasteTitle" Margin="257,0,0,129" TextWrapping="Wrap" Text="Paste Title" Background="#FF484848" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="112"/>
+        <ComboBox x:Name="PasteSyntax" Margin="380,0,0,128" VerticalAlignment="Bottom" Height="25" Background="#FF484848" BorderBrush="#00A02323" BorderThickness="0" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Left" Width="112">
+            <Button Content="None" Background="#00DDDDDD" Foreground="White" BorderThickness="0"/>
+            <Button Content="Lua" Background="#00DDDDDD" Foreground="White" BorderThickness="0"/>
+        </ComboBox>
+        <TextBox x:Name="PasteUsername" Margin="257,186,0,0" TextWrapping="Wrap" Text="Username" Background="#FF484848" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="112"/>
+        <PasswordBox x:Name="PastePassword" Margin="381,0,0,97" Background="#FF484848" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="23" VerticalAlignment="Bottom" Password="Password" HorizontalAlignment="Left" Width="110"/>
+        <Button x:Name="Back_Copy1" Content="Paste" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" Margin="276,0,0,68" HorizontalAlignment="Left" Width="199" Height="21" VerticalAlignment="Bottom"/>
+        <TextBlock Text="Optional" FontFamily="Leelawadee" FontSize="6" Foreground="White" Margin="425,0,0,117" IsEnabled="False" PreviewMouseDown="AltGenLink_PreviewMouseDown" Height="7" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="24"/>
+        <TextBlock Text="Optional" FontFamily="Leelawadee" FontSize="6" Foreground="White" Margin="302,0,0,118" Height="7" VerticalAlignment="Bottom" IsEnabled="False" PreviewMouseDown="AltGenLink_PreviewMouseDown" HorizontalAlignment="Left" Width="24"/>
+        <TextBlock Text="Pastebin" FontFamily="Leelawadee" FontSize="16" Foreground="White" Margin="345,0,0,154" Height="18" VerticalAlignment="Bottom" IsEnabled="False" PreviewMouseDown="AltGenLink_PreviewMouseDown" HorizontalAlignment="Left" Width="61"/>
+        <Button x:Name="FluxusTheme" Content="Fluxus" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="0,121,6,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+
+    </Grid>
+</UserControl>

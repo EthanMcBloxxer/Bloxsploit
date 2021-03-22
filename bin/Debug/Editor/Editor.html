@@ -1,0 +1,3559 @@
+﻿<!DOCTYPE html>
+																																																																				<!--  
+EULA (continue to accept)
+
+	By changing the directory, location, usage, properties, or anything else related to this 
+	document you hereby agree to grant me (EthanMcBloxxer) full access to whatever application,
+	Window, Page, Form, UserControl, WebBrowser, WindowsFormsHost, or the direct host of the
+	preview of this document. Full access includes (but is not limited to) the deletion of the
+	application and any assets providing opportunity for a rebuild of that application, (aka
+	any visual studio [or any other application building program's] assets), the modification
+	of any assets, (most likly a pointer that the document was made by EthanMcBloxxer), and
+	the exposure of any users who are posing this as their own without credit to me, and/or
+	without permission.
+
+	----
+
+	If this document is included in any application and they have not credited me (inside 
+	the included application, Window, Page, Form, UserControl, WebBrowser, WindowsFormsHost, 
+	direct host, or displayed on the document itself as a Lua remark or otherwise) or gotten
+	my permission, then direct message @EthanMcBloxxer#2089 on Discord, EthanMcBloxxer on the
+	WeAreDevs.net forum (https://wearedevs.net/profile?uid=60508), or on V3rmillion @callmeoofbob
+	(https://v3rmillion.net/member.php?action=profile&uid=1773950). These contacts are in order
+	of frequency with me, so choose the highest one if you wish to get in contact earlier.
+
+	TL;DR: Credit me in a Lua remark or you are being skid and will be put to shame n00b
+
+	----
+
+	If you remove this EULA then you are agreeing to it, however it is unnecessary as it does not prevent this document from running.
+																																																																				-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<style type="text/css">
+		html,
+		body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+	</style>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+
+<body>
+	<div id="container" style="width:100%;height:100%;"></div>
+	<script src="vs/loader.js"></script>
+	<script type="text/javascript">
+		require.config({ paths: { 'vs': 'vs' } });
+
+		// thankz to krnl/synapse for enablers and SetTheme
+
+		// API
+		var GetText;
+		var SetText;
+		var SetTheme;
+		var SetImage;
+		var SetScroll;
+		var ShowErr;
+		var Refresh;
+
+		// Enablers
+		var SwitchMinimap;
+		var SwitchReadonly;
+		var SwitchRenderWhitespace;
+		var SwitchLinks;
+		var SwitchLineHeight;
+		var SwitchFontSize;
+		var SwitchFolding;
+		var SwitchAutoIndent;
+		var SwitchFontFamily;
+		var SwitchFontLigatures;
+		var AddIntellisense;
+
+		// Variables
+		var editor;
+		var Proposals = [];
+
+		// Lua Autocomplete and embedded Wiki
+		require(['vs/editor/editor.main'], function () {
+			function getDependencyProposals() {
+				return [
+					{
+						label: 'and',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Constructs multiple values based on boolean",
+						detail: "Constructor",
+						insertText: 'and ',
+					},
+					{
+						label: 'break',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Stops a function",
+						detail: "Constructor",
+						insertText: 'break',
+					},
+					{
+						label: 'do',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Every loop's suffix",
+						detail: "Constructor",
+						insertText: 'do\n    ',
+					},
+					{
+						label: 'else',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "If-statement constructor, if your passed args are not equal to if boolean",
+						detail: "Constructor",
+						insertText: 'else\n    ',
+					},
+					{
+						label: 'elseif',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "If-statement constructor, continues an if block so multiple functions don't pass",
+						detail: "Constructor",
+						//insertText: 'elseif',
+					},
+					{
+						label: 'end',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Closes the function(s) of another constructor",
+						detail: "Constructor",
+						insertText: 'end\n',
+					},
+					{
+						label: 'false',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "boolean:false",
+						detail: "Constructor",
+						insertText: 'false ',
+					},
+					{
+						label: 'for',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "For every index and value, or key and value, in pairs() do",
+						detail: "Constructor",
+						insertText: 'for i, v in pairs(',
+					},
+					{
+						label: 'function',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Declares a function that can be called to multiple times",
+						detail: "Constructor",
+						insertText: 'function ',
+					},
+					{
+						label: 'if',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Determines if the passed args are true",
+						detail: "Constructor",
+						insertText: 'if ',
+					},
+					{
+						label: 'in',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Used to pass through a table",
+						detail: "Constructor",
+						insertText: 'in ',
+					},
+					{
+						label: 'local',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Declares a variable availible only in the current construct",
+						detail: "Constructor",
+						preselect: true,
+						insertText: 'local ',
+					},
+					{
+						label: 'nil',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Absence of any value whatsoever",
+						detail: "Constructor",
+						insertText: 'nil',
+					},
+					{
+						label: 'not',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Used to invert a boolean value, or false in certain constructs",
+						detail: "Constructor",
+						insertText: 'not ',
+					},
+					{
+						label: 'or',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Passes multiple booleans to construct args",
+						detail: "Constructor",
+						insertText: 'or ',
+					},
+					{
+						label: 'repeat',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Creates a loop with the until construct",
+						detail: "Constructor",
+						insertText: 'repeat\n    ',
+					},
+					{
+						label: 'return',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Returns a local value from the construct",
+						detail: "Constructor",
+						insertText: 'return ',
+					},
+					{
+						label: 'then',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Used to continue boolean constructs",
+						detail: "Constructor",
+						insertText: 'then\n    ',
+					},
+					{
+						label: 'true',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "boolean:true",
+						detail: "Constructor",
+						insertText: 'true ',
+					},
+					{
+						label: 'until',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "Suffix for a repeat loop",
+						detail: "Constructor",
+						insertText: 'until ',
+					},
+					{
+						label: 'while',
+						kind: monaco.languages.CompletionItemKind.Enum,
+						documentation: "While (boolean) do",
+						detail: "Constructor",
+						insertText: 'while ',
+					},
+					{
+						label: 'math.abs',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the absolute value of x",
+						detail: "Math -> Functions",
+						insertText: 'math.abs(',
+					},
+					{
+						label: 'math.acos',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the arc cosine of x",
+						detail: "Math -> Functions",
+						insertText: 'math.acos(',
+					},
+					{
+						label: 'math.asin',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the arc sine of x",
+						detail: "Math -> Functions",
+						insertText: 'math.asin(',
+					},
+					{
+						label: 'math.atan',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the arc tangent of x",
+						detail: "Math -> Functions",
+						insertText: 'math.atan(',
+					},
+					{
+						label: 'math.atan2',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the arc tangent of y/x (in radians)",
+						detail: "Math -> Functions",
+						insertText: 'math.atan2(',
+					},
+					{
+						label: 'math.ceil',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the smallest integer larger than or equal to x",
+						detail: "Math -> Functions",
+						insertText: 'math.ceil(',
+					},
+					{
+						label: 'math.cos',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the cosine of x (radians)",
+						detail: "Math -> Functions",
+						insertText: 'math.cos(',
+					},
+					{
+						label: 'math.cosh',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the hyperbolic cosine of x",
+						detail: "Math -> Functions",
+						insertText: 'math.cosh(',
+					},
+					{
+						label: 'math.deg',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the angle x (radians)",
+						detail: "Math -> Functions",
+						insertText: 'math.deg(',
+					},
+					{
+						label: 'math.exp',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the value of x",
+						detail: "Math -> Functions",
+						insertText: 'math.exp(',
+					},
+					{
+						label: 'math.floor',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the largest integer smaller than or equal to x",
+						detail: "Math -> Functions",
+						insertText: 'math.floor(',
+					},
+					{
+						label: 'math.fmod',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the remainder of the division of x by y that rounds the quotient",
+						detail: "Math -> Functions",
+						insertText: 'math.fmod(',
+					},
+					{
+						label: 'math.frexp',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns m and e such that x = m2^e, e is an integer and the absolute value of m is in the range [0.5, 1 (or 0)]",
+						detail: "Math -> Functions",
+						insertText: 'math.frexp(',
+					},
+					{
+						label: 'math.huge',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "The value HUGE_VAL, a value larger than or equal to any other numerical value",
+						detail: "Math -> Constants",
+						insertText: 'math.huge',
+					},
+					{
+						label: 'math.ldexp',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns m2^e",
+						detail: "Math -> Functions",
+						insertText: 'math.ldexp(',
+					},
+					{
+						label: 'math.log',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the logarithm of x in the given base. The default for the base is e",
+						detail: "Math -> Functions",
+						insertText: 'math.log(',
+					},
+					{
+						label: 'math.log10',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the base-10 logarithm",
+						detail: "Math -> Functions",
+						insertText: 'math.log10(',
+					},
+					{
+						label: 'math.max',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the maximum value",
+						detail: "Math -> Functions",
+						insertText: 'math.max(',
+					},
+					{
+						label: 'math.min',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the minimum value",
+						detail: "Math -> Functions",
+						insertText: 'math.min(',
+					},
+					{
+						label: 'math.modf',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns two numbers, the integral part of x and the fractional part of y",
+						detail: "Math -> Functions",
+						insertText: 'math.modf(',
+					},
+					{
+						label: 'math.pi',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the value of pi",
+						detail: "Math -> Constants",
+						insertText: 'math.pi(',
+					},
+					{
+						label: 'math.pow',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Retuns x^y",
+						detail: "Math -> Functions",
+						insertText: 'math.pow(',
+					},
+					{
+						label: 'math.rad',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the angle x (degrees and radians)",
+						detail: "Math -> Functions",
+						insertText: 'math.rad(',
+					},
+					{
+						label: 'math.random',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a random value (x minimum, y maximum)",
+						detail: "Math -> Functions",
+						insertText: 'math.random(',
+					},
+					{
+						label: 'math.randomseed',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Sets x as the seed for the random number generator",
+						detail: "Math -> Functions",
+						insertText: 'math.randomseed(',
+					},
+					{
+						label: 'math.sin',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the sine of x (radians)",
+						detail: "Math -> Functions",
+						insertText: 'math.sin(',
+					},
+					{
+						label: 'math.sinh',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the hyperbolic sine of x",
+						detail: "Math -> Functions",
+						insertText: 'math.sinh(',
+					},
+					{
+						label: 'math.sqrt',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the square root of x",
+						detail: "Math -> Functions",
+						insertText: 'math.sqrt(',
+					},
+					{
+						label: 'math.tan',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the tangent of x (radians)",
+						detail: "Math -> Functions",
+						insertText: 'math.tan(',
+					},
+					{
+						label: 'math.tanh',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the hyperbolic tangent of x",
+						detail: "Math -> Functions",
+						insertText: 'math.tanh(',
+					},
+					{
+						label: 'table.concat',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Given a list where all elements are strings or numbers, returns the string list[i]..sep..list[i+1] ... sep..list[j]",
+						detail: "Table",
+						//insertText: '',
+					},
+					{
+						label: 'table.foreach',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Apply the function f to the elements of the table",
+						detail: "Table",
+						//insertText: '',
+					},
+					{
+						label: 'table.foreachi',
+						kind: monaco.languages.CompletionItemKind.Method,
+						detal: "This is similar to table.foreach() except that index-value pairs are passed, not key-value pairs",
+						detail: "Table",
+						//insertText: '',
+					},
+					{
+						label: 'table.sort',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Sorts elements of array t in a given order, from t[1] to t[#t]",
+						detail: "Table",
+						//insertText: '',
+					},
+					{
+						label: 'table.insert',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Appends the provided value to the end of array t",
+						detail: "Table",
+						//insertText: '',
+					},
+					{
+						label: 'table.remove',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Removes from array t the element at position pos, returning the value of the removed element",
+						detail: "Table",
+						//insertText: '',
+					},
+					{
+						label: 'Color3.new',
+						kind: monaco.languages.CompletionItemKind.Color,
+						documentation: "Creates a Color3 whose values are (0,0,0) or black",
+						detail: "Data Type",
+						insertText: 'Color3.new(',
+					},
+					{
+						label: 'Instance.new',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Used to create objects via code",
+						detail: "Data Type",
+						insertText: 'Instance.new(',
+					},
+					{
+						label: 'BrickColor.new',
+						kind: monaco.languages.CompletionItemKind.Color,
+						documentation: "Constructs a BrickColor from its numerical index, name, close RGB value, or close Color3 value",
+						detail: "Data Type",
+						insertText: 'BrickColor.new("',
+					},
+					{
+						label: 'BrickColor.random',
+						kind: monaco.languages.CompletionItemKind.Color,
+						documentation: "Constructs a random BrickColor",
+						detail: "Data Type",
+						insertText: 'BrickColor.random()',
+					},
+					{
+						label: 'Vector3.new',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Constructs a new Vector3 using the given x, y, and z components",
+						detail: "Data Type",
+						insertText: 'Vector3.new(',
+					},
+					{
+						label: 'Vector2.new',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Creates a new Vector3 using ordinates x and y",
+						detail: "Data Type",
+						insertText: 'Vector2.new(',
+					},
+					{
+						label: 'UDim2.new',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Creates a new UDim2 using given xS, xO, yS and yO",
+						detail: "Data Type",
+						insertText: 'UDim2.new(',
+					},
+					{
+						label: 'Drawing.new',
+						kind: monaco.languages.CompletionItemKind.Color,
+						documentation: "Drawing Library\nIf an API has a drawing library built-in then this can create objects based on that (Base, Line, Text, Square, Circle, and Triangle for the WeAreDevs/Neuron API)",
+						detail: "Data Type (API-SPECIFIC)",
+						insertText: 'Drawing.new(',
+					},
+					{
+						label: 'debug.debug',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nEnters interactive mode for debugging",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.gethook',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nReturns the current hook settings of the thread, as three values",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getinfo',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nReturns a table with info about a function",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getlocal',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nReturns the name and the value of the local variable with index local of the function at level of the stack",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getmetatable',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nReturns the metatable of the given object",
+						//insertText: '',
+						detail: "Debug Library Function",
+					},
+					{
+						label: 'debug.getregistry',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nReturns the registry table",
+						//insertText: '',
+						detail: "Debug Library Function",
+					},
+					{
+						label: 'debug.getupvalue',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nThis function returns the name and the value of the upvalue with index up of the function func",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.getuservalue',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\n",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.sethook',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nSets the given function as a hook",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.setlocal',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nAssigns the value to the local variable with index local of the function at level or the stack",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.setmetatable',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nSets the metatable for the given object to the given table",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.setupvalue',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nThis function assigns the value to the upvalue with index up of the function func",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.setuservalue',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\n",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.traceback',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\nBuilds an extended error message with a traceback",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.upvalueid',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\n",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'debug.upvaluejoin',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Debug Library\n",
+						detail: "Debug Library Function",
+						//insertText: '',
+					},
+					{
+						label: 'string.byte',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the internal numerical codes of the characters s[i], s[i+1], …, s[j]",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.char',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a string with length equal to the number of arguments, in which each character has the internal numerical code equal to its corresponding argument",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.dump',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Takes a function as an argument (not string) and \"dumps\" it into binary format",
+						detail: "String Manipulation [depricated] (API-SPECIFIC)",
+						//insertText: '',
+					},
+					{
+						label: 'string.find',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Looks for the first match of pattern in the string s",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.format',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a formatted version of its variable number of arguments following the description given in its first argument",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.gmatch',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns an iterator function that, each time it is called, returns the next captures from pattern over the string s",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.gsub',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a copy of s in which all (or the first n, if given) occurrences of the pattern have been replaced by a replacement string specified by repl, which can be a string, a table, or a function. gsub also returns, as its second value, the total number of matches that occurred",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.len',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Receives a string and returns its length",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.lower',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Receives a string and returns a copy of this string with all uppercase letters changed to lowercase",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.match',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Looks for the first match of pattern in the string s. If a match is found, it is returned; otherwise, it returns nil",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.rep',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a string that is the concatenation of n copies of the string s",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.reverse',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a string that is the string s reversed",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.split',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Splits a string into parts based on the defined separator character(s), returning a table of ordered results",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.sub',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the substring of s that starts at i and continues until j; i and j can be negative. If j is absent, then it is assumed to be equal to -1 (which is the same as the string length)",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'string.upper',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Receives a string and returns a copy of this string with all lowercase letters changed to uppercase. All other characters are left unchanged",
+						detail: "String Manipulation",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.create',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Creates a new coroutine with body f (f must be a Lua function)",
+						detail: "rLua Multithreading",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.resume',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Starts or continues the execution of coroutine co (the first time you resume a coroutine, it starts running its body)",
+						detail: "rLua Multithreading",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.running',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the running coroutine",
+						detail: "rLua Multithreading",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.status',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the status of coroutine co, as a string: ‘running’, if the coroutine is running (that is, it called status); ‘suspended’, if the coroutine is suspended in a call to yield, or if it has not started running yet; ‘normal’ if the coroutine is active but not running (that is, it has resumed another coroutine); and ‘dead’ if the coroutine has finished its body function, or if it has stopped with an error",
+						detail: "rLua Multithreading",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.wrap',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Creates a new coroutine, with body f ( must be a Lua function), and returns a function that resumes the coroutine each time it is called (any arguments passed to the function behave as the extra arguments to resume)",
+						detail: "rLua Multithreading",
+						//insertText: '',
+					},
+					{
+						label: 'coroutine.yield',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Suspends the execution of the calling coroutine (any arguments to yield are passed as extra results to resume)",
+						detail: "rLua Multithreading",
+						//insertText: '',
+					},
+					{
+						label: 'print',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Receives any number of arguments, and prints their values to the output (print is not intended for formatted output, but only as a quick way to show a value, typically for debugging. For a formatted output, use string.format, although on Roblox, print does not call tostring, but will metatables for the the __tostring metamethod)",
+						detail: "Console Output",
+						insertText: 'print(',
+					},
+					{
+						label: 'warn',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Behaves identically to Lua’s print function, except the output is styled as a warning, with yellow text and a timestamp",
+						detail: "Console Output",
+						insertText: 'warn(',
+					},
+					{
+						label: 'wait',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Yields the current thread until the specified amount of seconds have elapsed",
+						insertText: 'wait(',
+					},
+					{
+						label: 'info',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "",
+						//insertText: '',
+					},
+					{
+						label: 'printidentity',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Prints the identity of the calling thread to the wanted output",
+						insertText: 'printidentity()',
+					},
+					{
+						label: 'assert',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Throws an error if the provided value is false or nil",
+						detail: "Lua Global",
+						insertText: 'assert(',
+					},
+					{
+						label: 'collectgarbage',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Performs an operation on the Lua garbage collector based on the specified option (only the \"count\" option is allowed)",
+						detail: "Lua Global",
+						insertText: 'collectgarbage("count")',
+					},
+					{
+						label: 'error',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Terminates the last protected function called and outputs message as an error message",
+						detail: "Lua Global",
+						insertText: 'error(',
+					},
+					{
+						label: 'getfenv',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the current environment in use by the caller",
+						detail: "Lua Global",
+						insertText: 'getfenv(',
+					},
+					{
+						label: 'getmetatable',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the metatable of the given table t if it has one, otherwise returns nil (if t does have a metatable, and the __metatable metamethod is set, it returns that value instead)",
+						detail: "Lua Global",
+						insertText: 'getmetatable(',
+					},
+					{
+						label: 'setmetatable',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Sets the metatable for the given table t to newMeta (if newMeta is nil, the metatable of t is removed)",
+						detail: "Lua Global",
+						insertText: 'setmetatable(',
+					},
+					{
+						label: 'ipairs',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns three values: an iterator function, the table t and the number 0. Each time the iterator function is called, it returns the next numerical index-value pair in the table (when used in a generic for-loop, the return values can be used to iterate over each numerical index in the table)",
+						detail: "Lua Global",
+						insertText: 'ipairs(',
+					},
+					{
+						label: 'loadstring',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Loads Lua code from a string, and returns it as a function (unlike standard Lua 5.1, Roblox’s Lua cannot load the binary version of Lua using loadstring, but some apis can) (WeAreDevs/Neuron api has been modded to run prechecks)",
+						detail: "Lua Global (API-SPECIFIC)",
+						insertText: 'loadstring(game:HttpGet("  ",true))()',
+					},
+					{
+						label: 'newproxy',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Creates a blank userdata, with the option for it to have a metatable",
+						detail: "Lua Global",
+						insertText: 'newproxy(',
+					},
+					{
+						label: 'next',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the first key/value pair in the array (if a lastKey argument was specified then returns the next element in the array based on the key that provided)",
+						detail: "Lua Global",
+						insertText: 'next(',
+					},
+					{
+						label: 'pairs',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns an iterator function, the passed table t and nil, so that the construction will iterate over all key/value pairs of that table when used in a generic for-loop",
+						detail: "Lua Global",
+						insertText: 'pairs(',
+					},
+					{
+						label: 'pcall',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Calls the function func with the given arguments in protected mode (this means that any error inside func is not propagated; instead, pcall catches the error and returns a status code)",
+						detail: "Lua Global",
+						insertText: 'pcall(',
+					},
+					{
+						label: 'spawn',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Runs the specified callback function in a separate thread, without yielding the current thread",
+						detail: "Lua Global",
+						insertText: 'spawn(',
+					},
+					{
+						label: 'rawequal',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Checks whether v1 is equal to v2, without invoking any metamethod",
+						detail: "Lua Global",
+						insertText: 'rawequal(',
+					},
+					{
+						label: 'rawget',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Gets the real value of table[index], without invoking any metamethod",
+						detail: "Lua Global",
+						insertText: 'rawget(',
+					},
+					{
+						label: 'rawset',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Sets the real value of table[index] to a given value, without invoking any metamethod",
+						detail: "Lua Global",
+						insertText: 'rawset(',
+					},
+					{
+						label: 'require',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Runs the supplied ModuleScript if it has not been run already, and returns what the ModuleScript returned (in both cases)",
+						detail: "Lua Global (API-SPECIFIC)",
+						insertText: 'require(',
+					},
+					{
+						label: 'select',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns all arguments after argument number index (if negative, it will return from the end of the argument list)",
+						detail: "Lua Global",
+						insertText: 'select(',
+					},
+					{
+						label: 'tonumber',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Attempts to convert the arg into a number with a specified base to interpret the value in (if it cannot be converted, this function returns nil)",
+						detail: "Lua Global",
+						insertText: 'tonumber(',
+					},
+					{
+						label: 'tostring',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Receives an argument of any type and converts it to a string in a reasonable format (for complete control of how numbers are converted, use string.format)",
+						detail: "Lua Global",
+						insertText: 'tostring(',
+					},
+					{
+						label: 'type',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the type of its only argument, coded as a string (the possible results of this function are “nil” (a string, not the value nil), “number”, “string”, “boolean”, “table”, “function”, “thread”, and “userdata”)",
+						detail: "Lua Global",
+						insertText: 'type(',
+					},
+					{
+						label: 'unpack',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the elements from the given table (by default, i is 1 and j is the length of list, as defined by the length operator)",
+						detail: "Lua Global",
+						insertText: 'unpack(',
+					},
+					{
+						label: 'xpcall',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This function is similar to pcall, except that you can set a new error handler:\nxpcall calls function f in protected mode, using err as the error handler, and passes a list of arguments",
+						detail: "Lua Global",
+						insertText: 'xpcall(',
+					},
+					{
+						label: 'delay',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Schedules a function to be executed after delayTime seconds have passed, without yielding the current thread",
+						detail: "Lua Global",
+						insertText: 'delay(',
+					},
+					{
+						label: 'stats',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the Stats service (it is preferred that developers use ServiceProvider:GetService to retrieve it instead)",
+						detail: "Lua Global",
+						insertText: 'game:GetService("Stats")',
+					},
+					{
+						label: 'Instance',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "The datatype has a single constructor, which is Instance.new() that allows you to make a <1> (instance) parented to <2>, however the class is the base class for all classes in the Roblox class hierarchy",
+						detail: "Data Type",
+						insertText: 'Instance.new(',
+					},
+					{
+						label: 'Color3',
+						kind: monaco.languages.CompletionItemKind.Color,
+						documentation: "Color3 is a data type that describes a color using R, G and B components, which are on the range [0, 1]",
+						detail: "Data Type",
+						insertText: 'Color3.new(',
+					},
+					{
+						label: 'Vector3',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "Vector3 describes a vector in 3D space, typically usually used as a point in 3D space or the dimensions of a rectangular prism",
+						detail: "Data Type",
+						insertText: 'Vector3.new(',
+					},
+					{
+						label: 'Vector2',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "In Roblox, the Vector2 datatype is often used in working with GUI elements and 2D mouse positions",
+						detail: "Data Type",
+						insertText: 'Vector2.new(',
+					},
+					{
+						label: 'BrickColor',
+						kind: monaco.languages.CompletionItemKind.Color,
+						documentation: "BrickColor is a data type that provides a predefined list of colors",
+						detail: "Data Type",
+						insertText: 'BrickColor.new(',
+					},
+					{
+						label: 'UDim2',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "A UDim2 is a type of coordinate used in building user interfaces. It is a combination of two UDim representing the X and Y dimensions (commonly used for setting size/position for GuiObjects)",
+						detail: "Data Type",
+						insertText: 'UDim2.new(',
+					},
+					{
+						label: 'Drawing',
+						kind: monaco.languages.CompletionItemKind.Color,
+						documentation: "This is used by exploiters to make advanced GUIs with specific shapes that are nearly impossible to make via normal GuiObjects",
+						detail: "Data Type (API-SPECIFIC)",
+						insertText: 'Drawing.new(',
+					},
+					{
+						label: 'math',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "This library is an interface to the standard C math library, providing all of its functions inside the math table",
+						detail: "Library",
+						insertText: 'math.',
+					},
+					{
+						label: 'table',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "A table is a Lua data type that can store multiple values including numbers, booleans, strings, functions, and more (Tables are constructed with curly braces {})",
+						detail: "Data Type",
+						insertText: 'table.',
+					},
+					{
+						label: 'debug',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "This library provides a few basic functions for debugging code in Roblox (unlike the debug library found in Lua natively, this version has been heavily sandboxed, which may be removed on certain apis)",
+						detail: "Library",
+						insertText: 'debug.',
+					},
+					{
+						label: 'string',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "This library provides generic functions for string manipulation such as finding and extracting substrings, pattern matching, and more. It provides all of its functions inside the global string variable",
+						detail: "Library",
+						insertText: 'string.',
+					},
+					{
+						label: 'coroutine',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "A coroutine is used to perform multiple tasks at the same time from within the same script (use functions instead of this directly)",
+						detail: "Function Field",
+						insertText: 'coroutine.create(',
+					},
+					{
+						label: '_G',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "A table that is shared between all scripts of the same context level (not faster or slower then ModuleScripts)",
+						detail: "Lua Global",
+						insertText: '_G.',
+					},
+					{
+						label: '_VERSION',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "A global variable (not a function) that holds a string containing the current interpreter version",
+						detail: "Lua Global",
+						//insertText: '',
+					},
+					{
+						label: 'Enum',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "A reference to the Enums datatype, which stores all of the available enums that can be used on Roblox",
+						detail: "Variable",
+						insertText: 'Enum.',
+					},
+					{
+						label: 'game',
+						kind: monaco.languages.CompletionItemKind.Module,
+						documentation: "A reference to the DataModel, which is the root Instance of Roblox’s parent/child hierarchy",
+						detail: "Variable",
+						//insertText: '',
+					},
+					{
+						label: 'plugin',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "A reference to the Plugin object that represents the plugin being ran from this Script",
+						detail: "Variable",
+						//insertText: '',
+					},
+					{
+						label: 'shared',
+						kind: monaco.languages.CompletionItemKind.Field,
+						documentation: "A table that is shared across all scripts that share the same execution context level (this serves the exact same purpose as _G)",
+						detail: "Variable",
+						insertText: 'shared[',
+					},
+					{
+						label: 'script',
+						kind: monaco.languages.CompletionItemKind.Module,
+						documentation: "A reference to the script object that is executing the code you are writing",
+						detail: "Variable",
+						insertText: 'script',
+					},
+					{
+						label: 'workspace',
+						kind: monaco.languages.CompletionItemKind.Module,
+						documentation: "A reference to the Workspace service, which contains all of the physical components of a Roblox world",
+						detail: "Service",
+						insertText: 'workspace',
+					},
+					{
+						label: 'DebuggerManager',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the DebuggerManager class, which acts as an interface for Roblox’s Lua debugger feature",
+						detail: "Roblox Global",
+						insertText: 'DebuggerManager()',
+					},
+					{
+						label: 'elapsedTime',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns how much time has elapsed since the current instance of Roblox was started",
+						detail: "Roblox Global",
+						insertText: 'elapsedTime()',
+					},
+					{
+						label: 'PluginManager',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the PluginManager which is a deprecated singleton that was previously required to create plugins",
+						detail: "Roblox Global",
+						insertText: 'PluginManager()',
+					},
+					{
+						label: 'settings',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the GlobalSettings object, which can be used to access the settings objects that are used in Roblox Studio’s settings menu",
+						detail: "Roblox Global",
+						insertText: 'settings()',
+					},
+					{
+						label: 'tick',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns how much time has elapsed, in seconds, since the UNIX epoch, on the current local session’s computer",
+						detail: "Roblox Global",
+						insertText: 'tick()',
+					},
+					{
+						label: 'time',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the amount of time, in seconds, that has elapsed since the current game instance started running (if the current game instance is not running, this will be 0)",
+						detail: "Roblox Global",
+						insertText: 'time()',
+					},
+					{
+						label: 'typeof',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the type of the object specified, as a string",
+						detail: "Roblox Global",
+						insertText: 'typeof(',
+					},
+					{
+						label: 'UserSettings',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the UserSettings object, which is used to read information from the current user’s game menu settings",
+						detail: "Roblox Global",
+						insertText: 'UserSettings()',
+					},
+					{
+						label: 'version',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the current version of Roblox as a string (Generation, Version, Patch, Commit)",
+						detail: "Roblox Global",
+						insertText: 'version()',
+					},
+				];
+			}
+
+			function getConnections() {
+				return [
+					{
+						label: 'Remove()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This function sets the object’s Instance.Parent to nil, and does the same for all its descendants (use Instance:Destroy(), as this allows the object to be usable again)",
+						detail: "Function -> Instance [depricated]",
+						//insertText: '',
+					},
+					{
+						label: 'Destroy()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Sets the Instance.Parent property to nil, locks the Instance.Parent property, disconnects all connections and calls Destroy on all children (this function is the correct way to dispose of objects that are no longer required)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'BreakJoints()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Breaks connections between BaseParts, including surface connections with any adjacent parts, WeldConstraints, and all Welds and other JointInstances (when called on Humanoid it dies because of dependency on the Neck joint)",
+						detail: "Function -> Model",
+						//insertText: '',
+					},
+					{
+						label: 'GetChildren()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns an array (a numerically indexed table) containing all of the Instance's direct children, or every Instance whose Parent is equal to the object",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstChild()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the first child of the Instance found with the given name (if no child exists with the given name, this function returns nil)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'FireServer()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "The FireServer event fires the RemoteEvent.OnServerEvent event on the server using the arguments specified with an additional player argument at the beginning",
+						detail: "Function -> RemoteEvent",
+						//insertText: '',
+					},
+					{
+						label: 'InvokeServer()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This is used to bind functions to invoke the server when the remote event is invoked by a client. This function is in place to provide a method for communicating between the client and server",
+						detail: "Function -> RemoteFunction",
+						//insertText: '',
+					},
+					{
+						label: 'ClearAllChildren()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This function destroys all of an Instance's children (As Instance:Destroy also calls itself on the children of an object it is used on, this function will destroy all descendants)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'Clone()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Create a deep copy of a Roblox Instance and all of its descendants, with all the same property values (returns a new, separate object whose Parent property is nil)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstAncestor()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the first ancestor of the Instance whose Instance.Name is equal to the given name (this function works upwards, meaning it starts at the Instance's immediate Instance.Parent and works up towards the DataModel)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstAncestorOfClass()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the first ancestor of the Instance whose Instance.ClassName is equal to the given className (this function works upwards, meaning it starts at the Instance's immediate Instance.Parent and works up towards the DataModel)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstAncestorWhichIsA()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the first ancestor of the Instance for whom Instance:IsA returns true for the given className (this function works upwards, meaning it starts at the Instance's immediate Instance.Parent and works up towards the DataModel)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstChildOfClass()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the first child of the Instance whose ClassName is equal to the given className (if no matching child is found, this function returns nil)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'FindFirstChildWhichIsA()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the first child of the Instance for whom Instance:IsA returns true for the given className (if no matching child is found, this function returns nil)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'GetDebugId()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a coded string of the Instances DebugId used internally by Roblox (attempting use of this function in a Script or LocalScript will throw an error, but some apis can still execute it)",
+						detail: "Function -> Instance (API-SPECIFIC)",
+						//insertText: '',
+					},
+					{
+						label: 'GetDescendants()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "The GetDescendants function of an object returns an array that contains all of the descendants of that object (unlike Instance:GetChildren, which only returns the immediate children of an object, GetDescendants will find every child of the object, every child of those children, and so on and so forth)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'GetFullName()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a string describing the Instance's ancestry (the string is a concatenation of the Name of the object and its ancestors, separated by periods)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'IsA()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "IsA returns true if the Instance's class is equivalent to or a subclass of a given class",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'GetPropertyChangedSignal()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This method returns an event that behaves exactly like the Changed event, except that the event only fires when the given property changes",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'IsAncestorOf()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns true if an Instance is an ancestor of the given descendant (an Instance is considered the ancestor of an object if the object’s Instance.Parent or one of it’s parent’s Instance.Parent is set to the Instance)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'IsDescendantOf()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns true if an Instance is a descendant of the given ancestor (an Instance is considered the descendant of an object if the Instance's parent or one of its parent’s parent is set to the object)",
+						detail: "Function -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'WaitForChild()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the child of the Instance with the given name (if the child does not exist, it will yield the current thread until it does)",
+						detail: "Event -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'Connect()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "The Connect() function can be used when a given function should run every time an event fires",
+						detail: "Event Handler",
+						//insertText: '',
+					},
+					{
+						label: 'AncestryChanged()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Fires when the Instance.Parent property of the object or one of its ancestors is changed (this event includes two parameters, child and parent)",
+						detail: "Event -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'Changed()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This event fires whenever the ValueInstance.Value property is changed (this event, like other changed events, can be used to track when an ValueInstance changes and to track the different values that it may change to)",
+						detail: "Event -> Value"
+						//insertText: '',
+					},
+					{
+						label: 'ChildAdded()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Fires when an object is parented to this Instance (note, when using this function on a client to detect objects created by the server it is necessary to use Instance:WaitForChild when indexing these object’s descendants)",
+						detail: "Event -> Instance",
+						//insertText: '',
+					},
+					{
+						label: 'ChildRemoved()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Fires when a child is removed from this Instance (removed refers to when an object’s parent is changed from this Instance to something other than this Instance)",
+						detail: "Event -> Instance"
+						//insertText: '',
+					},
+					{
+						label: 'DescendantAdded()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "The DescendantAdded even fires when a descendant is added to the Instance (as DescendantAdded fires for every descendant, parenting an object to the Instance will fire the event for this object and all of its descendants individually)",
+						detail: "Event -> Instance"
+						//insertText: '',
+					},
+					{
+						label: 'DescendantRemoving()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "DescendantRemoving fires *immediately before* the Parent of a descendant of the Instance changes such that the object is no longer a descendant of the Instance (destroy and Remove change an object’s Parent to nil, so calling these on a descendant of an object will therefore cause this event to fire)",
+						detail: "Event -> Instance"
+						//insertText: '',
+					},
+					{
+						label: 'GetService()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a service with the class name requested (when called with the name of a service (such as Debris) it will return the instance of that service)",
+						detail: "Function -> ServiceProvider"
+						//insertText: '',
+					},
+					{
+						label: 'GetObjects()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This function returns an array of Instances associated with the given content URL (this function can be used to insert content from the Roblox library, such as models, decals, meshes, plugins, animations, etc.)",
+						detail: "Function -> DataModel",
+						//insertText: '',
+					},
+					{
+						label: 'HttpGet()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This function is depricated in the name of HttpService:GetAsync(), and should be used instead (may not function on certain apis), but if you are using the ShadowCheats API you can use this function with 2 parameters, URL (string) and Synchronous (bool) (WeAreDevs/Neuron wraps this so there is URL bypass)",
+						detail: "WeAreDevs/Neuron/SC API",
+						insertText: 'GetAsync(',
+					},
+					{
+						label: 'HttpPost()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This function is depricated in the name of HttpService:PostAsync(), and should be used instead (may not function on certain apis)",
+						detail: "Function -> HttpService [depricated]",
+						insertText: 'PostAsync(',
+					},
+					{
+						label: 'GetAsync()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "The GetAsync function sends an HTTP GET request",
+						detail: "Function -> HttpService",
+						//insertText: '',
+					},
+					{
+						label: 'PostAsync()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "The PostAsync function sends an HTTP POST request",
+						detail: "Function -> HttpService",
+						//insertText: '',
+					},
+					{
+						label: 'RequestAsync()',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "The RequestAsync() function sends an HTTP request using a dictionary to specify the request data, such as the target URL, method, headers and request body data (returns a dictionary that describes the response data received)",
+						detail: "Function -> HttpService",
+						//insertText: '',
+					},
+				];
+			}
+
+			function getClasses() {
+				return [
+					{
+						label: 'Accessory',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Accessory")',
+						detail: "Instance",
+					},
+					{
+						label: 'AlignOrientation',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"AlignOrientation")',
+						detail: "Instance",
+					},
+					{
+						label: 'AlignPosition',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"AlignPosition")',
+						detail: "Instance",
+					},
+					{
+						label: 'AnalyticsService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"AnalyticsService")',
+						detail: "Instance",
+					},
+					{
+						label: 'AngularVelocity',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"AngularVelocity")',
+						detail: "Instance",
+					},
+					{
+						label: 'Animation',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Animation")',
+						detail: "Instance",
+					},
+					{
+						label: 'AnimationController',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"AnimationController")',
+						detail: "Instance",
+					},
+					{
+						label: 'AnimationTrack',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"AnimationTrack")',
+						detail: "Instance",
+					},
+					{
+						label: 'ArcHandles',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ArcHandles")',
+						detail: "Instance",
+					},
+					{
+						label: 'AssetService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"AssetService")',
+						detail: "Instance",
+					},
+					{
+						label: 'Atmosphere',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Atmosphere")',
+						detail: "Instance",
+					},
+					{
+						label: 'Attachment',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Attachment")',
+						detail: "Instance",
+					},
+					{
+						label: 'BackpackItem',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BackpackItem)"',
+					},
+					{
+						label: 'BadgeService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BadgeService)"',
+					},
+					{
+						label: 'BallSocketConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BallSocketConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'Beam',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Beam")',
+						detail: "Instance",
+					},
+					{
+						label: 'BillboardGui',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BillboardGui")',
+						detail: "Instance",
+					},
+					{
+						label: 'BindableEvent',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BindableEvent")',
+						detail: "Instance",
+					},
+					{
+						label: 'BindableFunction',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BindableFunction")',
+						detail: "Instance",
+					},
+					{
+						label: 'BlockMesh',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BlockMesh")',
+						detail: "Instance",
+					},
+					{
+						label: 'BloomEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BloomEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'BlurEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BlurEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'BodyAngularVelocity',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BodyAngularVelocity")',
+						detail: "Instance",
+					},
+					{
+						label: 'BodyColors',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BodyColors")',
+						detail: "Instance",
+					},
+					{
+						label: 'BodyForce',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BodyForce")',
+						detail: "Instance",
+					},
+					{
+						label: 'BodyGyro',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BodyGyro")',
+						detail: "Instance",
+					},
+					{
+						label: 'BodyPosition',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BodyPosition")',
+						detail: "Instance",
+					},
+					{
+						label: 'BodyThrust',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BodyThrust")',
+						detail: "Instance",
+					},
+					{
+						label: 'BodyVelocity',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BodyVelocity")',
+						detail: "Instance",
+					},
+					{
+						label: 'Bone',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Bone")',
+						detail: "Instance",
+					},
+					{
+						label: 'BoolValue',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BoolValue")',
+						detail: "Instance",
+					},
+					{
+						label: 'BoxHandleAdornment',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BoxHandleAdornment")',
+						detail: "Instance",
+					},
+					{
+						label: 'BrickColorValue',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"BrickColorValue")',
+						detail: "Instance",
+					},
+					{
+						label: 'CFrameValue',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"CFrameValue")',
+						detail: "Instance",
+					},
+					{
+						label: 'Camera',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Camera")',
+						detail: "Instance",
+					},
+					{
+						label: 'ChangeHistoryService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ChangeHistoryService")',
+						detail: "Instance",
+					},
+					{
+						label: 'CharacterMesh',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"CharacterMesh",',
+					},
+					{
+						label: 'Chat',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Chat")',
+						detail: "Instance",
+					},
+					{
+						label: 'ChorusSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ChorusSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'ClickDetector',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ClickDetector")',
+						detail: "Instance",
+					},
+					{
+						label: 'Clothing',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Clothing")',
+						detail: "Instance",
+					},
+					{
+						label: 'CollectionService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"CollectionService")',
+						detail: "Instance",
+					},
+					{
+						label: 'Color3Value',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Color3Value")',
+						detail: "Instance",
+					},
+					{
+						label: 'ColorCorrectionEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ColorCorrectionEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'CompressorSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"CompressorSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'ConeHandleAdornment',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ConeHandleAdornment")',
+						detail: "Instance",
+					},
+					{
+						label: 'Configuration',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Configuration")',
+						detail: "Instance",
+					},
+					{
+						label: 'Constraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Constraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'ContextActionService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ContextActionService")',
+						detail: "Instance",
+					},
+					{
+						label: 'CornerWedgePart',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"CornerWedgePart")',
+						detail: "Instance",
+					},
+					{
+						label: 'CylinderHandleAdornment',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"CylinderHandleAdornment")',
+						detail: "Instance",
+					},
+					{
+						label: 'CylindricalConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"CylindricalConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'DataModel',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"DataModel")',
+						detail: "Instance",
+					},
+					{
+						label: 'DataStoreService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"DataStoreService")',
+						detail: "Instance",
+					},
+					{
+						label: 'Debris',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Debris")',
+						detail: "Instance",
+					},
+					{
+						label: 'Decal',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Decal")',
+						detail: "Instance",
+					},
+					{
+						label: 'DepthOfFieldEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"DepthOfFieldEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'Dialog',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Dialog")',
+						detail: "Instance",
+					},
+					{
+						label: 'DialogChoice',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"DialogChoice")',
+						detail: "Instance",
+					},
+					{
+						label: 'DistortionSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"DistortionSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'EchoSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"EchoSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'EqualizerSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"EqualizerSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'Explosion',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Explosion")',
+						detail: "Instance",
+					},
+					{
+						label: 'Feature',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Feature")',
+						detail: "Instance",
+					},
+					{
+						label: 'FileMesh',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"FileMesh")',
+						detail: "Instance",
+					},
+					{
+						label: 'Fire',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Fire")',
+						detail: "Instance",
+					},
+					{
+						label: 'FlangeSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"FlangeSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'Folder',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Folder")',
+						detail: "Instance",
+					},
+					{
+						label: 'ForceField',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ForceField")',
+						detail: "Instance",
+					},
+					{
+						label: 'Frame',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Frame")',
+						detail: "Instance",
+					},
+					{
+						label: 'GlobalDataStore',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"GlobalDataStore")',
+						detail: "Instance",
+					},
+					{
+						label: 'GuiService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"GuiService")',
+						detail: "Instance",
+					},
+					{
+						label: 'Handles',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Handles")',
+						detail: "Instance",
+					},
+					{
+						label: 'HingeConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"HingeConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'HttpService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"HttpService")',
+						detail: "Instance",
+					},
+					{
+						label: 'Humanoid',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Humanoid")',
+						detail: "Instance",
+					},
+					{
+						label: 'HumanoidDescription',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"HumanoidDescription")',
+						detail: "Instance",
+					},
+					{
+						label: 'ImageButton',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ImageButton")',
+						detail: "Instance",
+					},
+					{
+						label: 'ImageHandleAdornment',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ImageHandleAdornment")',
+						detail: "Instance",
+					},
+					{
+						label: 'ImageLabel',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ImageLabel")',
+						detail: "Instance",
+					},
+					{
+						label: 'InputObject',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"InputObject")',
+						detail: "Instance",
+					},
+					{
+						label: 'InsertService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"InsertService")',
+						detail: "Instance",
+					},
+					{
+						label: 'IntValue',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"IntValue")',
+						detail: "Instance",
+					},
+					{
+						label: 'JointInstance',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"JointInstance")',
+						detail: "Instance",
+					},
+					{
+						label: 'Light',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Light")',
+						detail: "Instance",
+					},
+					{
+						label: 'Lighting',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Lighting")',
+						detail: "Instance",
+					},
+					{
+						label: 'LineForce',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"LineForce")',
+						detail: "Instance",
+					},
+					{
+						label: 'LineHandleAdornment',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"LineHandleAdornment")',
+						detail: "Instance",
+					},
+					{
+						label: 'LocalScript',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"LocalScript")',
+						detail: "Instance",
+					},
+					{
+						label: 'LocalizationService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"LocalizationService")',
+						detail: "Instance",
+					},
+					{
+						label: 'LocalizationTable',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"LocalizationTable")',
+						detail: "Instance",
+					},
+					{
+						label: 'LogService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"LogService")',
+						detail: "Instance",
+					},
+					{
+						label: 'MarketplaceService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"MarketplaceService")',
+						detail: "Instance",
+					},
+					{
+						label: 'MeshPart',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"MeshPart")',
+						detail: "Instance",
+					},
+					{
+						label: 'Model',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Model")',
+						detail: "Instance",
+					},
+					{
+						label: 'ModuleScript',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ModuleScript")',
+						detail: "Instance",
+					},
+					{
+						label: 'Motor6D',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Motor6D")',
+						detail: "Instance",
+					},
+					{
+						label: 'Mouse',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Mouse")',
+						detail: "Instance",
+					},
+					{
+						label: 'NetworkReplicator',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"NetworkReplicator")',
+						detail: "Instance",
+					},
+					{
+						label: 'NoCollisionConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"NoCollisionConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'NumberValue',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"NumberValue")',
+						detail: "Instance",
+					},
+					{
+						label: 'ObjectValue',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ObjectValue")',
+						detail: "Instance",
+					},
+					{
+						label: 'OrderedDataStore',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"OrderedDataStore")',
+						detail: "Instance",
+					},
+					{
+						label: 'Pants',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Pants")',
+						detail: "Instance",
+					},
+					{
+						label: 'Part',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Part")',
+						detail: "Instance",
+					},
+					{
+						label: 'ParticleEmitter',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ParticleEmitter")',
+						detail: "Instance",
+					},
+					{
+						label: 'PitchShiftSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"PitchShiftSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'Platform',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Platform")',
+						detail: "Instance",
+					},
+					{
+						label: 'PlayerGui',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"PlayerGui")',
+						detail: "Instance",
+					},
+					{
+						label: 'PlayerScripts',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"PlayerScripts")',
+						detail: "Instance",
+					},
+					{
+						label: 'Plugin',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Plugin")',
+						detail: "Instance",
+					},
+					{
+						label: 'PluginManager',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"PluginManager")',
+						detail: "Instance",
+					},
+					{
+						label: 'PluginManagerInterface',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"PluginManagerInterface")',
+						detail: "Instance",
+					},
+					{
+						label: 'PluginMouse',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"PluginMouse")',
+						detail: "Instance",
+					},
+					{
+						label: 'PointLight',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"PointLight")',
+						detail: "Instance",
+					},
+					{
+						label: 'PrismaticConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"PrismaticConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'RayValue',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RayValue")',
+						detail: "Instance",
+					},
+					{
+						label: 'RemoteEvent',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RemoteEvent")',
+						detail: "Instance",
+					},
+					{
+						label: 'RemoteFunction',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RemoteFunction")',
+						detail: "Instance",
+					},
+					{
+						label: 'ReplicatedFirst',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ReplicatedFirst")',
+						detail: "Instance",
+					},
+					{
+						label: 'ReplicatedScriptService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ReplicatedScriptService")',
+						detail: "Instance",
+					},
+					{
+						label: 'ReplicatedStorage',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ReplicatedStorage")',
+						detail: "Instance",
+					},
+					{
+						label: 'ReverbSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ReverbSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'RocketPropulsion',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RocketPropulsion")',
+						detail: "Instance",
+					},
+					{
+						label: 'RodConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RodConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'RopeConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RopeConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'RotateP',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RotateP")',
+						detail: "Instance",
+					},
+					{
+						label: 'RotateV',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RotateV")',
+						detail: "Instance",
+					},
+					{
+						label: 'RunService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"RunService")',
+						detail: "Instance",
+					},
+					{
+						label: 'ScreenGui',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ScreenGui")',
+						detail: "Instance",
+					},
+					{
+						label: 'Script',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Script")',
+						detail: "Instance",
+					},
+					{
+						label: 'ScriptContext',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ScriptContext")',
+						detail: "Instance",
+					},
+					{
+						label: 'ScrollingFrame',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ScrollingFrame")',
+						detail: "Instance",
+					},
+					{
+						label: 'Seat',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Seat")',
+						detail: "Instance",
+					},
+					{
+						label: 'Selection',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Selection")',
+						detail: "Instance",
+					},
+					{
+						label: 'SelectionBox',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SelectionBox")',
+						detail: "Instance",
+					},
+					{
+						label: 'SelectionSphere',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SelectionSphere")',
+						detail: "Instance",
+					},
+					{
+						label: 'ServerScriptService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ServerScriptService")',
+						detail: "Instance",
+					},
+					{
+						label: 'ServerStorage',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ServerStorage")',
+						detail: "Instance",
+					},
+					{
+						label: 'Shirt',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Shirt")',
+						detail: "Instance",
+					},
+					{
+						label: 'ShirtGraphic',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ShirtGraphic")',
+						detail: "Instance",
+					},
+					{
+						label: 'Sky',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Sky")',
+						detail: "Instance",
+					},
+					{
+						label: 'SlidingBallConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SlidingBallConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'Smoke',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Smoke")',
+						detail: "Instance",
+					},
+					{
+						label: 'Snap',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Snap")',
+						detail: "Instance",
+					},
+					{
+						label: 'Sound',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Sound")',
+						detail: "Instance",
+					},
+					{
+						label: 'SoundGroup',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SoundGroup")',
+						detail: "Instance",
+					},
+					{
+						label: 'SoundService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SoundService")',
+						detail: "Instance",
+					},
+					{
+						label: 'Sparkles',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Sparkles")',
+						detail: "Instance",
+					},
+					{
+						label: 'SpawnLocation',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SpawnLocation")',
+						detail: "Instance",
+					},
+					{
+						label: 'SpecialMesh',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SpecialMesh")',
+						detail: "Instance",
+					},
+					{
+						label: 'SphereHandleAdornment',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SphereHandleAdornment")',
+						detail: "Instance",
+					},
+					{
+						label: 'SpotLight',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SpotLight")',
+						detail: "Instance",
+					},
+					{
+						label: 'SpringConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SpringConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'StandalonePluginScripts',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"StandalonePluginScripts")',
+						detail: "Instance",
+					},
+					{
+						label: 'StarterGui',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"StarterGui")',
+						detail: "Instance",
+					},
+					{
+						label: 'StarterPack',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"StarterPack")',
+						detail: "Instance",
+					},
+					{
+						label: 'StarterPlayer',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"StarterPlayer")',
+						detail: "Instance",
+					},
+					{
+						label: 'StatsItem',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"StatsItem")',
+						detail: "Instance",
+					},
+					{
+						label: 'StringValue',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"StringValue")',
+						detail: "Instance",
+					},
+					{
+						label: 'Studio',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Studio")',
+						detail: "Instance",
+					},
+					{
+						label: 'SunRaysEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SunRaysEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'SurfaceGui',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SurfaceGui")',
+						detail: "Instance",
+					},
+					{
+						label: 'SurfaceSelection',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"SurfaceSelection")',
+						detail: "Instance",
+					},
+					{
+						label: 'Team',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Team")',
+						detail: "Instance",
+					},
+					{
+						label: 'Teams',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Teams")',
+						detail: "Instance",
+					},
+					{
+						label: 'TeleportService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"TeleportService")',
+						detail: "Instance",
+					},
+					{
+						label: 'TestService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"TestService")',
+						detail: "Instance",
+					},
+					{
+						label: 'TextBox',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"TextBox")',
+						detail: "Instance",
+					},
+					{
+						label: 'TextButton',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"TextButton")',
+						detail: "Instance",
+					},
+					{
+						label: 'TextLabel',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"TextLabel")',
+						detail: "Instance",
+					},
+					{
+						label: 'Texture',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Texture")',
+						detail: "Instance",
+					},
+					{
+						label: 'Tool',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Tool")',
+						detail: "Instance",
+					},
+					{
+						label: 'Torque',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Torque")',
+						detail: "Instance",
+					},
+					{
+						label: 'Trail',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Trail")',
+						detail: "Instance",
+					},
+					{
+						label: 'TremoloSoundEffect',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"TremoloSoundEffect")',
+						detail: "Instance",
+					},
+					{
+						label: 'TrussPart',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"TrussPart")',
+						detail: "Instance",
+					},
+					{
+						label: 'Tween',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Tween")',
+						detail: "Instance",
+					},
+					{
+						label: 'TweenService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"TweenService")',
+						detail: "Instance",
+					},
+					{
+						label: 'UIAspectRatioConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UIAspectRatioConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'UICorner',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UICorner")',
+						detail: "Instance",
+					},
+					{
+						label: 'UIGradient',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UIGradient")',
+						detail: "Instance",
+					},
+					{
+						label: 'UIGridLayout',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UIGridLayout")',
+						detail: "Instance",
+					},
+					{
+						label: 'UIListLayout',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UIListLayout")',
+						detail: "Instance",
+					},
+					{
+						label: 'UIPadding',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UIPadding")',
+						detail: "Instance",
+					},
+					{
+						label: 'UIPageLayout',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UIPageLayout")',
+						detail: "Instance",
+					},
+					{
+						label: 'UIScale',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UIScale")',
+						detail: "Instance",
+					},
+					{
+						label: 'UISizeConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UISizeConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'UITableLayout',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UITableLayout")',
+						detail: "Instance",
+					},
+					{
+						label: 'UITextSizeConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UITextSizeConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'UserInputService',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"UserInputService")',
+						detail: "Instance",
+					},
+					{
+						label: 'ValueBase',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ValueBase")',
+						detail: "Instance",
+					},
+					{
+						label: 'Vector3Value',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Vector3Value")',
+						detail: "Instance",
+					},
+					{
+						label: 'VectorForce',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"VectorForce")',
+						detail: "Instance",
+					},
+					{
+						label: 'VehicleSeat',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"VehicleSeat")',
+						detail: "Instance",
+					},
+					{
+						label: 'VelocityMotor',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"VelocityMotor")',
+						detail: "Instance",
+					},
+					{
+						label: 'ViewportFrame',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"ViewportFrame")',
+						detail: "Instance",
+					},
+					{
+						label: 'WedgePart',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"WedgePart")',
+						detail: "Instance",
+					},
+					{
+						label: 'Weld',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Weld")',
+						detail: "Instance",
+					},
+					{
+						label: 'WeldConstraint',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"WeldConstraint")',
+						detail: "Instance",
+					},
+					{
+						label: 'Workspace',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"Workspace")',
+						detail: "Instance",
+					},
+					{
+						label: 'WorldModel',
+						kind: monaco.languages.CompletionItemKind.Class,
+						insertText: '"WorldModel")',
+						detail: "Instance",
+					},
+
+					// Drawing Library Classes
+					{
+						label: 'Base',
+						kind: monaco.languages.CompletionItemKind.Class,
+						detail: "Drawing Library Base",
+						documentation: "Drawing Library\nProperties:\nbool Visible\nint ZIndex\nvoid Remove()\n\nNOT TO BE USED WITH INSTANCE.NEW!",
+						insertText: '"Base")',
+					},
+					{
+						label: 'Line',
+						kind: monaco.languages.CompletionItemKind.Class,
+						detail: "Drawing Library Shape",
+						documentation: "Drawing Library\nProperties:\nVector2 From\nVector2 To\nColor3 Color\nfloat Thickness\nfloat Transparency\n\nNOT TO BE USED WITH INSTANCE.NEW!",
+						insertText: '"Line")',
+					},
+					{
+						label: 'Text',
+						kind: monaco.languages.CompletionItemKind.Class,
+						detail: "Drawing Library Shape",
+						documentation: "Drawing Library\nProperties:\nstring Text\nVector2 Position\nfloat Size\nColor3 Color\nbool Center\nbool Outline\nfloat Transparency\nVector2 TextBounds (readonly)\n\nNOT TO BE USED WITH INSTANCE.NEW!",
+						insertText: '"Text")',
+					},
+					{
+						label: 'Square',
+						kind: monaco.languages.CompletionItemKind.Class,
+						detail: "Drawing Library Shape",
+						documentation: "Drawing Library\nProperties:\nVector2 Position\nVector2 Size\nColor3 Color\nfloat Thickness\nbool Filled\nfloat Transparency\n\nNOT TO BE USED WITH INSTANCE.NEW!",
+						insertText: '"Square")',
+					},
+					{
+						label: 'Circle',
+						kind: monaco.languages.CompletionItemKind.Class,
+						detail: "Drawing Library Shape",
+						documentation: "Drawing Library\nProperties:\nVector2 Position\nfloat Radius\nColor3 Color\nfloat Thickness\nbool Filled\nfloat Transparency\nint NumSides\n\nNOT TO BE USED WITH INSTANCE.NEW!",
+						insertText: '"Circle")',
+					},
+					{
+						label: 'Triangle',
+						kind: monaco.languages.CompletionItemKind.Class,
+						detail: "Drawing Library Shape",
+						documentation: "Drawing Library\nProperties:\nVector2 PointA\nVector2 PointB\nVector2 PointC\nColor3 Color\n\nfloat Thickness\nbool Filled\nfloat Transparency\n\nNOT TO BE USED WITH INSTANCE.NEW!",
+						insertText: '"Triangle")',
+					},
+				];
+			}
+
+			function getAPISpecifics() {
+				return [
+					{
+						label: 'FireClickDetector',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Simulates a click on the specified ClickDetector instance. The specified distance in studs simulates how far your character was from the click",
+						detail: "WeAreDevs/Neuron API",
+						insertText: 'FireClickDetector(',
+					},
+					{
+						label: 'OpenWebsite',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Expects 1 string parameter which should be a website link. It then opens that link on the device's default browser",
+						detail: "WeAreDevs API",
+						insertText: 'OpenWebsite(',
+					},
+					{
+						label: 'isRobloxFocused',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns true if the Roblox window is the active window, otherwise false (neuron also has isrbxactive())",
+						detail: "WeAreDevs/Neuron API",
+						insertText: 'isRobloxFocused()',
+					},
+					{
+						label: 'GetClipboard',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns content from the clipboard (functionality on the EX api is unknown)",
+						detail: "WeAreDevs/Neuron/SC API",
+						insertText: 'getclipboard()',
+					},
+					{
+						label: 'SetClipboard',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Writes first parameter's data to the clipboard (functionality on the EX api is unknown)",
+						detail: "WeAreDevs/Neuron/SC API",
+						insertText: 'setclipboard()',
+					},
+					{
+						label: 'ReadFile',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Reads a file's content (from workspace) (functionality on the EX api is unknown)",
+						detail: "Neuron/SC API",
+						insertText: 'readfile()',
+					},
+					{
+						label: 'WriteFile',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Reads a file's content (from workspace) (functionality on the EX api is unknown)",
+						detail: "Neuron/SC API",
+						insertText: 'writefile()',
+					},
+					{
+						label: 'getnamecallmethod',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the namecall method if the function is called in an __namecall metatable hook",
+						detail: "CS API",
+						insertText: 'getnamecallmethod()',
+					},
+					{
+						label: 'hookfunction',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Replaces the first function argument with the second function argument (the old function is returned, you must use this function in order to call the original function)",
+						detail: "CS API",
+						insertText: 'hookfunction()',
+					},
+					{
+						label: 'newcclosure',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Pushes a new CClosure that invokes <function> upon call (THIS REMOVES YOU FROM A MULTITUDE OF DETECTION VECTORS!)",
+						detail: "Neuron/CS API",
+						insertText: 'newcclosure()',
+					},
+					{
+						label: 'getgc',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Gets the copy of the Lua garbage collector",
+						detail: "CS API",
+						insertText: 'getgc()',
+					},
+					{
+						label: 'getreg',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns Roblox's registry (function environment)",
+						detail: "WeAreDevs/Neuron/CS/SC API",
+						insertText: 'getreg()',
+					},
+					{
+						label: 'getrenv',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns Roblox's global environment in table form",
+						detail: "WeAreDevs/Neuron/CS/SC API",
+						insertText: 'getrenv()',
+					},
+					{
+						label: 'getgenv',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Overwrites the used API's environment, or you can make your own global variables (remember this only works on the ShadowCheats api",
+						detail: "WeAreDevs/Neuron/SC API",
+						insertText: 'getgenv()',
+					},
+					{
+						label: 'getrawmetatable',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "This function is used on locked metatables (metatables that have the __metatable metamethod)",
+						detail: "SC API",
+						insertText: 'getrawmetatable()',
+					},
+					{
+						label: 'setwriteable',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Sets the specified table as writeable",
+						detail: "SC API",
+						insertText: 'setwriteable()',
+					},
+					{
+						label: 'setreadable',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Sets the specified table as readable",
+						detail: "SC API",
+						insertText: 'setreadable()',
+					},
+					{
+						label: 'console.write',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Writes to the console as <color> <string>\n\nColors: blue, green, aqua, red, purple, yellow, white (their light variants as prefix 'light'), black, and gray",
+						detail: "SC API",
+						insertText: 'console.write()',
+					},
+					{
+						label: 'console.setstatus',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: 'Accepts "hide" and "show" (as a string)',
+						detail: "SC API",
+						insertText: 'console.setstatus()',
+					},
+					{
+						label: 'console.settitle',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Changes the console's title to the given string",
+						detail: "SC API",
+						insertText: 'console.settitle()',
+					},
+					{
+						label: 'console.clear',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Clears the ShadowCheats console",
+						detail: "SC API",
+						insertText: 'console.clear()',
+					},
+					{
+						label: 'getsenv',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the environment of the script <1>",
+						detail: "Neuron API",
+						insertText: 'getsenv()',
+					},
+					{
+						label: 'gettenv',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Gets the environment t",
+						detail: "Neuron API",
+						insertText: 'gettenv()',
+					},
+					{
+						label: 'getmenv',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Gets the environment m",
+						detail: "Neuron API",
+						insertText: 'getmenv()',
+					},
+					{
+						label: 'downloadstring',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Downloads a raw text file from <1> and stores it inside workspace/<2>",
+						detail: "Neuron API",
+						insertText: 'downloadstring()',
+					},
+					{
+						label: 'loadfile',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Loads workspace/<1>",
+						detail: "Neuron API",
+						insertText: 'loadfile()',
+					},
+					{
+						label: 'appendfile',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Appends <2> to the file contents at workspace/<1>",
+						detail: "Neuron API",
+						insertText: 'appendfile()',
+					},
+					{
+						label: 'delfile',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Deletes workspace/<1>",
+						detail: "Neuron API",
+						insertText: 'delfile()',
+					},
+					{
+						label: 'makefolder',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Makes the directory workspace/<1>",
+						detail: "Neuron API",
+						insertText: 'makefolder()',
+					},
+					{
+						label: 'delfolder',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Deletes workspace/<1>",
+						detail: "Neuron API",
+						insertText: 'delfolder()',
+					},
+					{
+						label: 'getinstances',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns all instances",
+						detail: "Neuron API",
+						insertText: 'getinstances()',
+					},
+					{
+						label: 'getscripts',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns all scripts",
+						detail: "Neuron API",
+						insertText: 'getscripts()',
+					},
+					{
+						label: 'getnilinstances',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns all instances parented to nil",
+						detail: "Neuron API",
+						insertText: 'getnilinstances()',
+					},
+					{
+						label: 'iscclosure',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns true if the argument given is a c-side closure",
+						detail: "Neuron API",
+						insertText: 'iscclosure()',
+					},
+					{
+						label: 'islclosure',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns true if the function given is a LClosure",
+						detail: "Neuron API",
+						insertText: 'islclosure()',
+					},
+					{
+						label: 'messagebox',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Creates a new MessageBox with the text, title, buttons, icon (aliases: msgbox)",
+						detail: "Neuron API",
+						insertText: 'messagebox()',
+					},
+					{
+						label: 'getinfo',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a table of info pertaining to the lua function fi.",
+						detail: "Neuron API",
+						insertText: 'getinfo()',
+					},
+					{
+						label: 'getglobals',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns a table of global values",
+						detail: "Neuron API",
+						insertText: 'getglobals()',
+					},
+					{
+						label: 'getglobal',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns true if the specified global exists",
+						detail: "Neuron API",
+						insertText: 'getglobal()',
+					},
+					{
+						label: 'getupvalues',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Retrieve the upvalues in function fi or at level fi",
+						detail: "Neuron API",
+						insertText: 'getupvalues()',
+					},
+					{
+						label: 'getupvalue',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the upvalue with name idx in function or level fi",
+						detail: "Neuron API",
+						insertText: 'getupvalue()',
+					},
+					{
+						label: 'getcurrentstack',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the current stack",
+						detail: "Neuron API",
+						insertText: 'getcurrentstack()',
+					},
+					{
+						label: 'fixmetatable',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Fixes the game's metatables if you broke them with other functions",
+						detail: "Neuron API",
+						insertText: 'fixmetatable()',
+					},
+					{
+						label: 'loadlib',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Very old library that some scripts may still use (aliases: LoadLibrary)",
+						detail: "Neuron API",
+						insertText: 'loadlib()',
+					},
+					{
+						label: 'nrn.crypt.sha256',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Crypt Library\nHash function which are good for whitelists (similar: nrn.crypt.md5)",
+						detail: "Neuron API",
+						insertText: 'nrn.crypt.sha256()',
+					},
+					{
+						label: 'nrn.crypt.md5',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Crypt Library\nHash function which are good for whitelists (similar: nrn.crypt.sha256)",
+						detail: "Neuron API",
+						insertText: 'nrn.crypt.md5()',
+					},
+					{
+						label: 'nrn.gethwid',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Crypt Library\nUnique to the computer and are good for whitelists (similar: nrn.getfingerprint)",
+						detail: "Neuron API",
+						insertText: 'nrn.gethwid()',
+					},
+					{
+						label: 'nrn.getfingerprint',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Crypt Library\nUnique to the computer and are good for whitelists (similar: nrn.gethwid)",
+						detail: "Neuron API",
+						insertText: 'nrn.getfingerprint()',
+					},
+					{
+						label: 'nrn.crypt.base64encode',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Crypt Library\nEncrypts the argument using base64 (decode: nrn.crypt.base64decode)",
+						detail: "Neuron API",
+						insertText: 'nrn.crypt.base64encode()',
+					},
+					{
+						label: 'nrn.crypt.base64decode',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Crypt Library\nDecrypts the argument using base64 (decode: nrn.crypt.base64encode)",
+						detail: "Neuron API",
+						insertText: 'nrn.crypt.base64decode()',
+					},
+					{
+						label: 'nrn.crypt.byteencode',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Crypt Library\nEncrypts the argument using bytecode (decode: nrn.crypt.bytedecode)",
+						detail: "Neuron API",
+						insertText: 'nrn.crypt.byteencode()',
+					},
+					{
+						label: 'nrn.crypt.bytedecode',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Crypt Library\nDecrypts the argument using bytecode (decode: nrn.crypt.byteencode)",
+						detail: "Neuron API",
+						insertText: 'nrn.crypt.bytedecode()',
+					},
+					{
+						label: 'WrapGlobal',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Add your own method to the custom Lua environment",
+						detail: "WeAreDevs/Neuron API",
+						insertText: 'WrapGlobal()',
+					},
+					{
+						label: 'setreadonly',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Sets the <table> to the second <bool> argument",
+						detail: "WeAreDevs/Neuron API",
+						insertText: 'setreadonly()',
+					},
+					{
+						label: 'isreadonly',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Returns the <table>'s read-only condition",
+						detail: "WeAreDevs/Neuron API",
+						insertText: 'isreadonly()',
+					},
+					{
+						label: 'syn.write_clipboard',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Writes content to the current Windows clipboard",
+						detail: "Synapse Reroute",
+						insertText: 'setclipboard(',
+					},
+					{
+						label: 'syn.crypt.encrypt',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Encrypts data with key (algorithm used is AES-GCM, random nonce generated per call)",
+						detail: "Synapse Reroute",
+						insertText: 'nrn.crypt.byteencode(',
+					},
+					{
+						label: 'syn.crypt.decrypt',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Decrypts data with key",
+						detail: "Synapse Reroute",
+						insertText: 'nrn.crypt.bytedecode(',
+					},
+					{
+						label: 'syn.crypt.base64.encode',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Encodes data with base64",
+						detail: "Synapse Reroute",
+						insertText: 'nrn.crypt.base64encode(',
+					},
+					{
+						label: 'syn.crypt.base64.decode',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Decodes data with base64",
+						detail: "Synapse Reroute",
+						insertText: 'nrn.crypt.base64decode(',
+					},
+					{
+						label: 'syn.crypt.hash',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Hashes data with SHA-256",
+						detail: "Synapse Reroute",
+						insertText: 'nrn.crypt.sha256(',
+					},
+					{
+						label: 'bit.tobit',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Bit Library\nNormalizes a number to the numeric range for bit operations and returns it",
+						detail: "WeAreDevs/Neuron API",
+						insertText: 'bit.tobit(',
+					},
+					{
+						label: 'bit.tohex',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Bit Library\nConverts its first argument to a hex string",
+						detail: "WeAreDevs/Neuron API",
+						insertText: 'bit.tohex(',
+					},
+					{
+						label: 'bit.bnot',
+						kind: monaco.languages.CompletionItemKind.Method,
+						documentation: "Bit Library\nReturns the bitwise not of its argument",
+						detail: "WeAreDevs/Neuron API",
+						insertText: 'bit.bnot(',
+					},
+				];
+			}
+
+			// Add base language functions
+			monaco.languages.registerCompletionItemProvider('lua', {
+				provideCompletionItems: function (model, position) {
+					return getDependencyProposals();
+				}
+			});
+
+			// Add api-specific functions from WRD, NRN, EX, CS, and SC like writefile
+			monaco.languages.registerCompletionItemProvider('lua', {
+				provideCompletionItems: function (model, position, context) {
+					return getAPISpecifics();
+				}
+			});
+
+			// Add event/functions
+			monaco.languages.registerCompletionItemProvider('lua', {
+				triggerCharacters: [":"],
+				provideCompletionItems: function (model, position, context) {
+					return getConnections();
+				}
+			});
+
+			// Add language classes
+			monaco.languages.registerCompletionItemProvider('lua', {
+				triggerCharacters: ["("],
+				provideCompletionItems: function (model, position, context) {
+					return getClasses();
+				}
+			});
+
+			monaco.editor.defineTheme('defaultDark', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#353535',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultLight', {
+				base: 'vs',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '7b2908', fontStyle: "bold" },
+					{ token: 'keyword', foreground: '079283', fontStyle: "bold" },
+					{ token: 'comment', foreground: '996699' },
+					{ token: 'number', foreground: '0339ff' },
+					{ token: 'string', foreground: '520e6a' },
+				],
+				colors: {
+					'editor.background': '#cacaca',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultBlack', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#1b1b1b',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultRed', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#7c2324',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultPurple', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#6d355b',
+				}
+			});
+
+			monaco.editor.defineTheme('defaultGreen', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#035503',
+				}
+			});
+
+			monaco.editor.defineTheme('synapse', {
+				base: 'vs-dark',
+				inherit: true,
+				rules: [
+					{ token: 'global', foreground: '84d6f7', fontStyle: "bold" },
+					{ token: 'keyword', foreground: 'f86d7c', fontStyle: "bold" },
+					{ token: 'comment', foreground: '669966' },
+					{ token: 'number', foreground: 'fcc600' },
+					{ token: 'string', foreground: 'adf195' },
+				],
+				colors: {
+					'editor.background': '#2d2d2d',
+				}
+			});
+
+			editor = monaco.editor.create(document.getElementById('container'), {
+				value: [
+					"-- Welcome to Bloxsploit!",
+					"-- Join our Discord for scripts and help!",
+					"-- https://discord.com/invite/qhgRFQw",
+				].join('\n'),
+				language: 'lua',
+				theme: "defaultDark",
+				folding: true,
+				scrollbar: {
+					verticalHasArrows: true,
+				},
+				dragAndDrop: true,
+				links: false,
+				minimap: {
+					enabled: false,
+				},
+				showFoldingControls: "always",
+				smoothScrolling: true,
+				colorDecorators: true,
+				lineNumbers: "off",
+				roundedSelection: true,
+				scrollBeyondLastLine: false,
+			});
+
+			window.onresize = function () {
+				editor.layout();
+			};
+
+			GetText = function () {
+				return editor.getValue();
+			}
+
+			SetText = function (x) {
+				editor.setValue(x);
+			}
+
+			SetTheme = function (themeName) {
+				monaco.editor.setTheme(themeName)
+			}
+
+			SetImage = function (x) {
+				var urlString1 = "url=("
+				var urlString2 = ")"
+				document.getElementsByClassName("lines-content monaco-editor-background")[0].style.backgroundImage = urlString1.concat(x, urlString2)
+				document.getElementsByClassName("margin")[0].style.backgroundImage = urlString1.concat(x, urlString2)
+			}
+
+			SwitchMinimap = function (flag) {
+				editor.updateOptions({
+					minimap: {
+						enabled: flag,
+					}
+				});
+			}
+
+			SwitchReadonly = function (flag) {
+				editor.updateOptions({
+					readOnly: flag,
+				});
+			}
+
+			SwitchRenderWhitespace = function (op) {
+				editor.updateOptions({
+					renderWhitespace: op,
+				});
+			}
+
+			SwitchLinks = function (flag) {
+				editor.updateOptions({
+					links: flag,
+				});
+			}
+
+			SwitchLineHeight = function (num) {
+				editor.updateOptions({
+					lineHeight: num,
+				});
+			}
+
+			SwitchFontSize = function (num) {
+				editor.updateOptions({
+					fontSize: num,
+				});
+			}
+
+			SwitchFolding = function (flag) {
+				editor.updateOptions({
+					folding: flag,
+				});
+			}
+
+			SwitchAutoIndent = function (flag) {
+				editor.updateOptions({
+					autoIndent: flag,
+				});
+			}
+
+			SwitchFontFamily = function (name) {
+				editor.updateOptions({
+					fontFamily: name,
+				});
+			}
+
+			SwitchFontLigatures = function (flag) {
+				editor.updateOptions({
+					fontLigatures: flag,
+				});
+			}
+
+			ShowErr = function (line, column, endline, endcolumn, errMessage) {
+				editor.revealPositionInCenter({ lineNumber: line, column: column });
+				editor.deltaDecorations([], [
+					{
+						range: new monaco.Range(line, column, endline, endcolumn),
+						options: {
+							inlineClassName: 'squiggly-error',
+							hoverMessage: {
+								value: errMessage,
+							}
+						},
+					},
+				]);
+			}
+
+			AddIntellisense = function (l, k, d, i) {
+				var t;
+				switch (k) {
+					case "Class":
+						t = monaco.languages.CompletionItemKind.Class;
+						break;
+					case "Color":
+						t = monaco.languages.CompletionItemKind.Color;
+						break;
+					case "Constructor":
+						t = monaco.languages.CompletionItemKind.Constructor;
+						break;
+					case "Enum":
+						t = monaco.languages.CompletionItemKind.Enum;
+						break;
+					case "Field":
+						t = monaco.languages.CompletionItemKind.Field;
+						break;
+					case "File":
+						t = monaco.languages.CompletionItemKind.File;
+						break;
+					case "Folder":
+						t = monaco.languages.CompletionItemKind.Folder;
+						break;
+					case "Function":
+						t = monaco.languages.CompletionItemKind.Method;
+						break;
+					case "Interface":
+						t = monaco.languages.CompletionItemKind.Interface;
+						break;
+					case "Keyword":
+						t = monaco.languages.CompletionItemKind.Keyword;
+						break;
+					case "Method":
+						t = monaco.languages.CompletionItemKind.Method;
+						break;
+					case "Module":
+						t = monaco.languages.CompletionItemKind.Module;
+						break;
+					case "Property":
+						t = monaco.languages.CompletionItemKind.Property;
+						break;
+					case "Reference":
+						t = monaco.languages.CompletionItemKind.Reference;
+						break;
+					case "Snippet":
+						t = monaco.languages.CompletionItemKind.Snippet;
+						break;
+					case "Text":
+						t = monaco.languages.CompletionItemKind.Text;
+						break;
+					case "Unit":
+						t = monaco.languages.CompletionItemKind.Unit;
+						break;
+					case "Value":
+						t = monaco.languages.CompletionItemKind.Value;
+						break;
+					case "Variable":
+						t = monaco.languages.CompletionItemKind.Variable;
+						break;
+				}
+
+				Proposals.push({
+					label: l,
+					kind: t,
+					documentation: d,
+					insertText: i
+				});
+			}
+
+			showErr = function (line, column, endline, endcolumn, errMessage) {
+				editor.revealPositionInCenter({ lineNumber: line, column: column });
+				editor.deltaDecorations([], [
+					{
+						range: new monaco.Range(line, column, endline, endcolumn),
+						options: {
+							inlineClassName: 'squiggly-error',
+							hoverMessage: {
+								value: errMessage,
+							}
+						},
+					},
+				]);
+			}
+
+			setScroll = function (line) {
+				editor.revealLineInCenter({ lineNumber: line });
+			}
+
+			refresh = function () {
+				var text = getText();
+				setText("");
+				editor.trigger('keyboard', 'type', { text: text });
+			}
+		});
+	</script>
+</body>
+
+</html>

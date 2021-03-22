@@ -1,0 +1,43 @@
+﻿<UserControl x:Name="ScriptHubWindow" x:Class="BloxsploitWPF.ScriptHub"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BloxsploitWPF"
+      mc:Ignorable="d"
+      Height="Auto" Width="Auto">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Dictionary1.xaml"/>
+    </UserControl.Resources>
+    <Grid Background="#FF353535" Height="306" Width="677">
+        <GroupBox x:Name="LargeScripts" Header="Large Scripts" Margin="10,3,0,55" Foreground="White" BorderBrush="White" FontSize="18" HorizontalAlignment="Left" Width="175" BorderThickness="0"/>
+        <GroupBox x:Name="Utils" Header="Universal Miscellaneous Utilities" Margin="195,3,16,55" Foreground="White" BorderBrush="#FFAEAEAE" FontSize="18" BorderThickness="0" Padding="0"/>
+        <Button x:Name="Games" Content="Games Hub" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="11,0,0,10" Width="172" HorizontalAlignment="Left" Height="37" VerticalAlignment="Bottom"/>
+        <Button x:Name="Back" Content="Back" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="197,0,16,10" Height="37" VerticalAlignment="Bottom" Click="Back_Click"/>
+        <Button x:Name="Fly" Content="Fly [E]" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="209,32,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="Noclip" Content="Noclip [Q]" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="209,75,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="WalkSpeed" Content="Walk Speed +25" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="320,32,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="98"/>
+        <Button x:Name="JumpPower" Content="Jump Power +20" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="320,75,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="98"/>
+        <Button x:Name="Btools" Content="B-Tools" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="433,32,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96"/>
+        <Button x:Name="Drophats" Content="Drop Hats" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="433,75,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96"/>
+        <Button x:Name="TODD" Content="TODD" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="545,32,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="SaveTools" Content="Save Tools" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="545,75,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="BringAll" Content="Bring All [F] [R]" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="209,117,0,0" Height="38" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="TpTool" Content="Teleport Tool" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="320,117,0,0" Height="38" VerticalAlignment="Top" HorizontalAlignment="Left" Width="98"/>
+        <Button x:Name="DroppableTools" Content="Droppable Tools" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="433,117,0,0" Height="38" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96"/>
+        <Button x:Name="RetrieveTools" Content="Retrieve Tools" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="545,117,0,0" Height="38" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="Invisible" Content="Invisible" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="209,160,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="ESP" Content="ESP" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="320,160,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="98"/>
+        <Button x:Name="Infjump" Content="Infinite Jump" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="433,160,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96"/>
+        <Button x:Name="EquipTools" Content="Equip Tools" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="545,160,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="InstantRespawn" Content="Instant Respawn" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="209,203,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="97"/>
+        <Button x:Name="InvisFling" Content="Invisible Fling" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="320,203,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="98"/>
+        <Button x:Name="Translator" Content="Chat Translator" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="433,203,0,0" Height="37" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96"/>
+        <Button x:Name="CrabRave" Content="Crab Rave" Background="#FF484848" Foreground="White" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="545,203,0,0" HorizontalAlignment="Left" Width="97" Height="37" VerticalAlignment="Top"/>
+        <Button x:Name="IY" Content="Infinite Yield" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="24,35,507,223"/>
+        <Button x:Name="Reviz" Content="Reviz Admin" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="24,88,507,172"/>
+        <Button x:Name="topkek" Content="T0PK3K 4" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="24,140,507,119"/>
+        <Button x:Name="Dex" Content="Dark Dex 4" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Margin="24,192,507,66"/>
+
+    </Grid>
+</UserControl>

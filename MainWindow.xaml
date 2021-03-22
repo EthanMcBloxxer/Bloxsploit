@@ -1,0 +1,53 @@
+﻿<Window x:Class="BloxsploitWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BloxsploitWPF"
+        mc:Ignorable="d"
+        Title="Bloxsploit" Height="358" Width="677" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" Icon="Resources\bslogo.png" Topmost="True" MinHeight="358" MinWidth="677">
+    <Window.Resources>
+        <ResourceDictionary Source="Dictionary1.xaml"/>
+    </Window.Resources>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"/>
+    </WindowChrome.WindowChrome>
+    <Grid x:Name="Main" SnapsToDevicePixels="True" Loaded="Main_Loaded" Background="#B2171717">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="271*"/>
+            <RowDefinition Height="85*"/>
+        </Grid.RowDefinitions>
+        <Canvas x:Name="Topbar" Background="#FF484848" RenderTransformOrigin="0.5,0.5" Height="53" VerticalAlignment="Top" MouseDown="Topbar_MouseDown">
+            <Image x:Name="Logo" HorizontalAlignment="Left" Height="53" VerticalAlignment="Top" Width="49" Source="Resources/whitelogo.png" Canvas.Left="10" Stretch="Fill"/>
+        </Canvas>
+        <ListBox x:Name="ScriptBox" Margin="0,53,0,82" Background="#FF413C3C" BorderThickness="0" HorizontalAlignment="Right" Width="180" Grid.RowSpan="2"/>
+        <Canvas x:Name="ButtonBar" Height="51" VerticalAlignment="Bottom" Grid.Row="1" Background="#FF2E2E2E">
+            <Button x:Name="Attach" Content="Attach" Canvas.Left="10" Canvas.Top="8" Width="137" Height="34" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold"/>
+        </Canvas>
+        <Button x:Name="Save" Content="Save" Margin="0,0,89,51" BorderThickness="0" Background="#FF413C3C" Foreground="White" Grid.Row="1" FontSize="16" Height="32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="91" FontFamily="Segoe UI Semibold"/>
+        <Button x:Name="Open" Content="Open" Margin="0,0,0,51" BorderThickness="0" Background="#FF413C3C" Foreground="White" Grid.Row="1" FontSize="16" Height="33" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="89" FontFamily="Segoe UI Semibold"/>
+        <WebBrowser x:Name="Monaco" Margin="0,53,180,51" Grid.RowSpan="2" Visibility="Visible"/>
+        <Canvas Margin="0,0,10,10" Grid.Row="1" HorizontalAlignment="Right" Width="446" Height="34" VerticalAlignment="Bottom">
+            <Button x:Name="Execute" Content="Execute" Width="137" Height="34" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold"/>
+            <Button x:Name="ScriptHub" Content="Script Hub" Canvas.Left="158" Canvas.Top="1" Width="137" Height="34" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Click="ScriptHub_Click" />
+            <Button x:Name="Options" Content="Options" Canvas.Left="309" Canvas.Top="1" Width="137" Height="34" Background="#FF484848" Foreground="White" FontSize="16" BorderBrush="#00707070" BorderThickness="0" FontFamily="Segoe UI Semibold" Click="Options_Click"/>
+        </Canvas>
+        <Canvas Margin="0,8,8,0" HorizontalAlignment="Right" Width="87" Height="37" VerticalAlignment="Top">
+            <Button x:Name="Minimize" Width="33" Height="33" BorderThickness="0" Content="" FontSize="24" Canvas.Left="2" Canvas.Top="2" Foreground="Black" Click="Minimize_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="WhiteMinimize.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="CloseWindow" Canvas.Left="50" Width="33" Height="33" BorderThickness="0" Content="" FontSize="24" Click="CloseWindow_Click" Canvas.Top="2">
+                <Button.Background>
+                    <ImageBrush ImageSource="WhiteClose.png"/>
+                </Button.Background>
+            </Button>
+        </Canvas>
+        <Label x:Name="TitleName" Content="Bloxsploit" FontFamily="Leelawadee" FontSize="28" Foreground="White" HorizontalAlignment="Center" Margin="263,5,274,218" Width="132" MouseDown="TitleName_MouseDown"/>
+        <TextBlock x:Name="Version" FontFamily="Global User Interface" FontSize="15" Foreground="White" MouseEnter="Version_MouseEnter" MouseLeave="Version_MouseLeave" HorizontalAlignment="Center" Text="v1.0" Margin="392,11,238,0" VerticalAlignment="Top" MouseDown="Version_MouseDown" Width="39"/>
+        <local:ScriptHub x:Name="ScriptHubWindow" Grid.RowSpan="2" Margin="0,53,0,0" IsVisibleChanged="ScriptHubWindow_IsVisibleChanged" Visibility="Collapsed"/>
+        <local:Options x:Name="OptionsTab" Margin="0,53,0,0" Grid.RowSpan="2" Visibility="Collapsed" IsVisibleChanged="OptionsTab_OnIsVisibleChanged" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+
+    </Grid>
+</Window>
