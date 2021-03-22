@@ -64,7 +64,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.GameScripts = new System.Windows.Forms.Label();
             this.GamesHub = new System.Windows.Forms.Button();
-            this.Games = new Bloxsploit.User_Controls.GamesHub();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -593,15 +592,6 @@
             this.GamesHub.UseVisualStyleBackColor = false;
             this.GamesHub.Click += new System.EventHandler(this.GamesHub_Click);
             // 
-            // Games
-            // 
-            this.Games.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(53)))), ((int)(((byte)(53)))));
-            this.Games.Location = new System.Drawing.Point(0, 56);
-            this.Games.Name = "Games";
-            this.Games.Size = new System.Drawing.Size(677, 298);
-            this.Games.TabIndex = 37;
-            this.Games.Visible = false;
-            // 
             // ScriptHubWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -609,7 +599,6 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(53)))), ((int)(((byte)(53)))));
             this.CancelButton = this.CloseWindow;
             this.ClientSize = new System.Drawing.Size(677, 400);
-            this.Controls.Add(this.Games);
             this.Controls.Add(this.GamesHub);
             this.Controls.Add(this.JumpPower);
             this.Controls.Add(this.WalkSpeed);
@@ -690,6 +679,5 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label GameScripts;
         private System.Windows.Forms.Button GamesHub;
-        private User_Controls.GamesHub Games;
     }
 }

@@ -51,7 +51,6 @@ namespace Bloxsploit
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.refresher = new System.Windows.Forms.Timer(this.components);
             this.Pastebin = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.TitleBar.SuspendLayout();
             this.ButtonPanel.SuspendLayout();
             this.SuspendLayout();
@@ -326,21 +325,12 @@ namespace Bloxsploit
             this.Pastebin.UseVisualStyleBackColor = false;
             this.Pastebin.Click += new System.EventHandler(this.Pastebin_Click);
             // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(280, 79);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(296, 167);
-            this.richTextBox1.TabIndex = 10;
-            this.richTextBox1.Text = "";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(53)))), ((int)(((byte)(53)))));
             this.ClientSize = new System.Drawing.Size(677, 356);
-            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.ButtonPanel);
             this.Controls.Add(this.Open);
             this.Controls.Add(this.Save);
@@ -387,7 +377,6 @@ namespace Bloxsploit
         private System.Windows.Forms.Button Pastebin;
         private System.Windows.Forms.Timer refresher;
         private System.Windows.Forms.Button Logo;
-        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 

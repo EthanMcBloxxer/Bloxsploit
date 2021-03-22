@@ -185,7 +185,7 @@ namespace Bloxsploit
             {
                 if (!WeAreDevsAPI.IsAPIAttached())
                 {
-                    await WeAreDevsAPI.AttachExploit(richTextBox1, "\\Bin", "\\Workspace");
+                    await WeAreDevsAPI.AttachExploit(null, "\\Bin", "\\Workspace");
                 }
             }
             if (Properties.Settings.Default.API == "EasyExploits")
